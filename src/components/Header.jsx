@@ -5,7 +5,7 @@ const Header = () => {
     <header className="w-full p-4 border-b-[0.5px] border-b-grey">
       <div className="flex items-center justify-center">
         <img src={logo} alt="logo icon" width={50} height={50} />
-        <span className="text-3xl font-cabin-sketch">BannerAi</span>
+        <span className="text-3xl cursor-default font-cabin-sketch">BannerAi</span>
       </div>
     </header>
   );
