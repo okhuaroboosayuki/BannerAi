@@ -7,6 +7,11 @@ export default {
         comfortaa: ["Comfortaa", "serif"],
         "cabin-sketch": ["Cabin Sketch", "serif"],
       },
+      colors: {
+        Bluebell: "#5068E2",
+        Silvermist: "#BCC1CA",
+        Pewter: "#565E6C",
+      },
     },
   },
   plugins: [],
