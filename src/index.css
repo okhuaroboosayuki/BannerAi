@@ -6,12 +6,44 @@
 
 @layer base {
   * {
-    @apply m-0 p-0 scroll-smooth box-border font-comfortaa;
+    @apply box-border p-0 m-0 scroll-smooth font-comfortaa;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-500 ease-in-out;
   }
 }
 
 @layer components {
+  .text-input {
+    @apply h-[45px] placeholder:text-sm outline-none border border-Silvermist focus:border-Pewter rounded-md text-base px-3 text-Pewter sm:w-[500px] w-full;
+  }
+
+  .buttonWithSVG-hover:hover {
+    svg {
+      @apply text-black fill-current transition-smooth;
+    }
+
+    span {
+      @apply text-black transition-smooth;
+    }
+  }
+
+  .button {
+    @apply p-4 font-medium text-white capitalize rounded-md bg-DeepBlue transition-smooth;
+
+    &:hover {
+      @apply bg-Bluebell;
+    }
+  }
 }
 
 @layer utilities {
+  .scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
