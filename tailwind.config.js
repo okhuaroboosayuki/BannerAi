@@ -9,8 +9,10 @@ export default {
       },
       colors: {
         Bluebell: "#5068E2",
+        DeepBlue: "#223FD2",
         Silvermist: "#BCC1CA",
         Pewter: "#565E6C",
+        Whisper: "#F3F4F6",
       },
     },
   },
