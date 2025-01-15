@@ -15,8 +15,16 @@
 }
 
 @layer components {
+  .input {
+    @apply h-[45px] placeholder:text-sm outline-none border border-Silvermist focus:border-Pewter rounded-md text-base px-3 text-Pewter;
+  }
+
   .text-input {
-    @apply h-[45px] placeholder:text-sm outline-none border border-Silvermist focus:border-Pewter rounded-md text-base px-3 text-Pewter sm:w-[500px] w-full;
+    @apply input sm:w-[500px] w-full;
+  }
+
+  .scoialMedia-input {
+    @apply input sm:w-[350px] w-full;
   }
 
   .buttonWithSVG-hover:hover {
