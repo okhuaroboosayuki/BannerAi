@@ -1,7 +1,16 @@
 import PropTypes from "prop-types";
 
-const Input = ({ type, placeholder, name, value, onChange, dispatch }) => {
+const Input = ({ type, placeholder, name, value, onChange, dispatch, errors }) => {
   const isNotSocialMedia = name !== "facebook" && name !== "twitter" && name !== "instagram" && name !== "linkedin" && name !== "github" && name !== "behance" && name !== "dribble" && name !== "youtube" && name !== "X" && name !== "website";
+
+  const displayNameToKey = {
+    "full name": "name",
+    email: "email",
+    profession: "profession",
+    "social media": "socialMedia",
+  };
+
+  const errorKey = displayNameToKey[name];
 
   if (isNotSocialMedia)
     return (
@@ -9,7 +18,8 @@ const Input = ({ type, placeholder, name, value, onChange, dispatch }) => {
         <label htmlFor={name} className="self-start">
           {name}
         </label>
-        <input type={type} name={name} id={name} placeholder={placeholder} className={"text-input"} onChange={onChange} value={value} />
+        <input type={type} name={name} id={name} placeholder={placeholder} className={errors[errorKey] ? "text-input border-red-600" : "border-Silvermist text-input"} onChange={onChange} value={value} />
+        {errors[errorKey] && <p className="error">{errors[errorKey]}</p>}
       </div>
     );
 
@@ -32,6 +42,7 @@ Input.propTypes = {
   onChange: PropTypes.func,
   socialButtonClicked: PropTypes.bool,
   dispatch: PropTypes.func,
+  errors: PropTypes.object,
 };
 
 export default Input;
