@@ -10,10 +10,20 @@ const useFormReducer = () => {
     socialMediaLink: "",
     socialMedia: [],
     socialButtonClicked: false,
+    errors: {
+      name: "",
+      email: "",
+      profession: "",
+      socialMedia: "",
+    },
   };
 
   const reducer = (state, action) => {
+    const formNotFilled = !state.name || !state.email || !state.profession || state.socialMedia.length === 0;
+
     switch (action.type) {
+      case "loading":
+        return { ...state, isLoading: !formNotFilled };
       case "name":
         return { ...state, name: action.payload };
       case "email":
@@ -26,8 +36,11 @@ const useFormReducer = () => {
         return { ...state, socialButtonClicked: state.socialMediaName === action.payload ? false : true, socialMediaName: state.socialMediaName === action.payload ? "" : action.payload, socialMediaLink: state.socialMediaName !== action.payload ? "" : state.socialMediaLink };
       case "addSocialMedia":
         return { ...state, socialMedia: [...state.socialMedia, { [state.socialMediaName]: state.socialMediaLink }], socialButtonClicked: false, socialMediaName: "", socialMediaLink: "" };
-      case "submit":
-        return { ...state, payload: action.payload, name: "", email: "", profession: "", socialMedia: [], socialMediaLink: "", socialButtonClicked: false, socialMediaName: "" };
+      case "error":
+        return { ...state, errors: { ...state.errors, [action.payload.name]: action.payload.error } };
+      case "submit": {
+        return { ...state, isLoading: false, name: "", email: "", profession: "", socialMedia: [], socialMediaLink: "", socialMediaName: "", socialButtonClicked: false, errors: { name: "", email: "", profession: "", socialMedia: "" } };
+      }
       default:
         return state;
     }
