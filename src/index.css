@@ -16,7 +16,7 @@
 
 @layer components {
   .input {
-    @apply h-[45px] placeholder:text-sm outline-none border border-Silvermist focus:border-Pewter rounded-md text-base px-3 text-Pewter;
+    @apply h-[45px] placeholder:text-sm outline-none border focus:border-Pewter rounded-md text-base px-3 text-Pewter;
   }
 
   .text-input {
@@ -24,7 +24,7 @@
   }
 
   .scoialMedia-input {
-    @apply input sm:w-[350px] w-full;
+    @apply input sm:w-[350px] w-full border-Silvermist;
   }
 
   .buttonWithSVG-hover:hover {
@@ -43,6 +43,10 @@
     &:hover {
       @apply bg-Bluebell;
     }
+  }
+
+  .error {
+    @apply self-start text-sm text-red-600;
   }
 }
 
