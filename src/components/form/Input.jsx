@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
+import { forwardRef } from "react";
 
-const Input = ({ type, placeholder, name, value, socialMediaLink, onChange, dispatch, errors }) => {
-  const isSocialMedia = ["facebook", "linkedin", "instagram", "X", "github", "behance", "dribble", "youtube", "website"].includes(name);
+const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onChange, dispatch, errors }, ref) => {
+  const isSocialMedia = ["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].includes(name);
 
   const displayNameToKey = {
     "full name": "name",
@@ -33,24 +34,22 @@ const Input = ({ type, placeholder, name, value, socialMediaLink, onChange, disp
 
   return (
     <div className="flex items-center gap-2">
-      <input
-        type={type}
-        name={name}
-        id={name}
-        placeholder={placeholder}
-        onChange={onChange}
-        className={socialMediaLink ? "socialMedia-input border-Silvermist transition-smooth" : "socialMedia-input border-red-600"}
-        value={value}
-      />
+      <input type={type} name={name} id={name} placeholder={placeholder} onChange={onChange} ref={ref} className="socialMedia-input transition-smooth border-Silvermist" value={value} />
 
       <span
         className={`px-3 py-[9.5px] capitalize rounded-md bg-Whisper text-Pewter hover:text-black transition-smooth border cursor-pointer`}
-        onClick={() => socialMediaLink && dispatch({ type: "addSocialMedia" })}>
+        onClick={() =>
+          !socialMediaLink
+            ? dispatch({ type: "error", payload: { name: "socialMedia", error: `A ${name} ${name !== "website" ? "username" : "URL"} must be provided` } })
+            : dispatch({ type: "addSocialMedia" })
+        }>
         add
       </span>
     </div>
   );
-};
+});
+
+Input.displayName = "Input";
 
 Input.propTypes = {
   type: PropTypes.string.isRequired,

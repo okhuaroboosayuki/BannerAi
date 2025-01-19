@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import useFormReducer from "../hooks/useFormReducer.jsx";
 import { generateBanner } from "../services/gemini-service.js";
 import { handleInputChange } from "../utils/handleInputChange .jsx";
@@ -8,9 +9,17 @@ import Input from "./form/Input";
 import SocialMediaField from "./form/SocialMediaField";
 
 const Main = () => {
+  const smInputRef = useRef(null);
+
   const { state, dispatch } = useFormReducer();
 
   const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors } = state;
+
+  useEffect(() => {
+    if (socialButtonClicked && smInputRef.current) {
+      smInputRef.current.focus();
+    }
+  }, [socialButtonClicked, socialMediaName]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +69,7 @@ const Main = () => {
 
         <>
           <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide">
-            {["facebook", "linkedin", "instagram", "X", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
+            {["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
               <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} />
             ))}
           </div>
@@ -77,6 +86,7 @@ const Main = () => {
             dispatch={dispatch}
             socialMediaLink={socialMediaLink}
             value={socialMediaLink}
+            ref={smInputRef}
             key={socialMediaName}
           />
         )}
