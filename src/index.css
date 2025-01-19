@@ -23,8 +23,8 @@
     @apply input sm:w-[500px] w-full;
   }
 
-  .scoialMedia-input {
-    @apply input sm:w-[350px] w-full border-Silvermist;
+  .socialMedia-input {
+    @apply input sm:w-[350px] w-full;
   }
 
   .buttonWithSVG-hover:hover {
