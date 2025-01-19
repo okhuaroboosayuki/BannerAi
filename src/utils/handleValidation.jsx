@@ -1,9 +1,11 @@
 import { validateEmail } from "./validateEmail";
 
 /**
+ * Validates form fields and dispatches errors if validation fails.
  *
- * @param {*} state
- * @param {*} dispatch
+ * @param {Object} state - The current state of the form.
+ * @param {Function} dispatch - The dispatch function for updating state.
+ * @returns {boolean} - Returns `true` if any errors are found, otherwise `false`.
  */
 
 export const handleValidation = (state, dispatch) => {
