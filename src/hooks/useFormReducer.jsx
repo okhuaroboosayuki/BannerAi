@@ -36,6 +36,7 @@ const useFormReducer = () => {
           socialButtonClicked: state.socialMediaName !== action.payload,
           socialMediaName: state.socialMediaName === action.payload ? "" : action.payload,
           socialMediaLink: state.socialMediaName !== action.payload ? "" : state.socialMediaLink,
+          errors: { ...state.errors, socialMedia: "" },
         };
       case "addSocialMedia":
         return {
@@ -44,7 +45,7 @@ const useFormReducer = () => {
           socialButtonClicked: false,
           socialMediaName: "",
           socialMediaLink: "",
-          errors: { ...state.errors, socialMedia: state.errors.socialMedia && "" },
+          errors: { ...state.errors, socialMedia: "" },
         };
       case "error":
         return { ...state, errors: { ...state.errors, [action.payload.name]: action.payload.error } };
