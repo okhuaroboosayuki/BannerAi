@@ -1,4 +1,5 @@
-import useFormReducer from "../reducer/useFormReducer.jsx";
+import useFormReducer from "../hooks/useFormReducer.jsx";
+import { generateBanner } from "../services/gemini-service.js";
 import { handleInputChange } from "../utils/handleInputChange .jsx";
 import { handleValidation } from "../utils/handleValidation.jsx";
 import Button from "./Button";
@@ -11,31 +12,28 @@ const Main = () => {
 
   const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors } = state;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    handleValidation(state, dispatch);
+    const hasErrors = handleValidation(state, dispatch);
 
-    const hasErrors = Object.values(state.errors).some((error) => error);
+    console.log(errors, socialMediaLink);
 
-    if (!hasErrors) {
-      dispatch({ type: "loading" });
+    if (hasErrors) return;
 
-      setTimeout(() => {
-        // Complete submission and reset state
+    try {
+      dispatch({ type: "loading", payload: true });
+      console.log(isLoading);
 
-        const formFilled = name && email && profession && socialMedia.length > 0;
+      const result = await generateBanner(profession);
+      console.log(result);
 
-        if (formFilled) {
-          // Submit the form
-          console.log(name, email, profession, socialMedia, socialMediaLink, isLoading);
-          dispatch({ type: "submit" });
-        } else {
-          console.log(name, email, profession, socialMedia, socialMediaLink, isLoading);
-          console.error("Form is incomplete");
-          dispatch({ type: "loading", payload: false });
-        }
-      }, 2000);
+      console.log([name, email, profession, socialMedia, socialMediaLink, socialMediaName, isLoading, errors]);
+
+      dispatch({ type: "submit" });
+      dispatch({ type: "loading", payload: false });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -51,13 +49,23 @@ const Main = () => {
 
         <Input type={"email"} placeholder={"johndoe@email.com"} name={"email"} onChange={(e) => handleInputChange("email", e.target.value, errors, dispatch)} value={email} errors={errors} />
 
-        <Input type={"text"} placeholder={"Sales Specialist"} name={"profession"} onChange={(e) => handleInputChange("profession", e.target.value, errors, dispatch)} value={profession} errors={errors} />
+        <Input
+          type={"text"}
+          placeholder={"Sales Specialist"}
+          name={"profession"}
+          onChange={(e) => handleInputChange("profession", e.target.value, errors, dispatch)}
+          value={profession}
+          errors={errors}
+        />
 
-        <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide">
-          {["facebook", "linkedin", "instagram", "X", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
-            <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide">
+            {["facebook", "linkedin", "instagram", "X", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
+              <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} />
+            ))}
+          </div>
+          {errors.socialMedia && <p className="error self-center">{errors.socialMedia}</p>}
+        </>
 
         {socialButtonClicked && (
           <Input
@@ -65,8 +73,9 @@ const Main = () => {
             placeholder={socialMediaName !== "website" ? `${socialMediaName} username` : `${socialMediaName} url`}
             width="325px"
             name={socialMediaName}
-            onChange={(e) => handleInputChange("socialMediaLink", e.target.value, errors, dispatch)}
+            onChange={(e) => dispatch({ type: "socialMediaLink", payload: e.target.value })}
             dispatch={dispatch}
+            socialMediaLink={socialMediaLink}
             value={socialMediaLink}
             key={socialMediaName}
           />
