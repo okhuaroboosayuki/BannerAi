@@ -1,15 +1,16 @@
 import { PropTypes } from "prop-types";
 
-const Button = ({ text }) => {
+const Button = ({ text, isLoading }) => {
   return (
     <button type="submit" className="button">
-      {text}
+      {isLoading ? "loading..." : text}
     </button>
   );
 };
 
 Button.propTypes = {
   text: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 export default Button;
