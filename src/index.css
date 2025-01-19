@@ -46,7 +46,7 @@
   }
 
   .error {
-    @apply self-start text-sm text-red-600;
+    @apply self-start text-sm text-center text-red-600;
   }
 }
 
