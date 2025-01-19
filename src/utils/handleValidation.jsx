@@ -33,9 +33,12 @@ export const handleValidation = (state, dispatch) => {
     },
   ];
 
+  let hasErrors = false;
+
   fields.forEach(({ name, value, rules }) => {
     rules.forEach((rule) => {
       if (!rule.check(value)) {
+        hasErrors = true;
         dispatch({
           type: "error",
           payload: { name, error: rule.message },
@@ -43,4 +46,6 @@ export const handleValidation = (state, dispatch) => {
       }
     });
   });
+
+  return hasErrors;
 };
