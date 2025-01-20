@@ -95,5 +95,5 @@ export const generateBanner = async (profession) => {
 
   const result = await model.generateContent(prompt);
 
-  return result.response.text();
+  return JSON.parse(result.response.text());
 };
