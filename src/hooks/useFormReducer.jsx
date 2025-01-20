@@ -8,6 +8,7 @@ const useFormReducer = () => {
     profession: "",
     socialMediaName: "",
     socialMediaLink: "",
+    generatedOutput: null,
     socialMedia: [],
     socialButtonClicked: false,
     errors: {
@@ -52,14 +53,20 @@ const useFormReducer = () => {
       case "submit": {
         return {
           ...state,
+          errors: { name: "", email: "", profession: "", socialMedia: "" },
+          generatedOutput: action.payload,
+        };
+      }
+      case "reset": {
+        return {
+          ...state,
           name: "",
           email: "",
           profession: "",
-          socialMedia: [],
-          socialMediaLink: "",
           socialMediaName: "",
-          socialButtonClicked: false,
-          errors: { name: "", email: "", profession: "", socialMedia: "" },
+          socialMediaLink: "",
+          socialMedia: [],
+          generatedOutput: null,
         };
       }
       default:
