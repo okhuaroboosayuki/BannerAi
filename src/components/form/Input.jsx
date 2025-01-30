@@ -1,16 +1,25 @@
 import PropTypes from "prop-types";
 import { forwardRef } from "react";
 
-const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onChange, dispatch, errors }, ref) => {
+const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onChange, dispatch, errors, generatedOutput, customWidth }, ref) => {
   const isSocialMedia = ["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].includes(name);
 
-  const displayNameToKey = {
-    "full name": "name",
-    email: "email",
-    profession: "profession",
+  const addSocialMedia = () => {
+    if (!socialMediaLink) {
+      dispatch({ type: "error", payload: { name: "socialMedia", error: `A ${name} ${name !== "website" ? "username" : "URL"} must be provided` } });
+    } else {
+      dispatch({ type: "addSocialMedia" });
+    }
   };
 
-  const errorKey = displayNameToKey[name];
+  const handleEnterKeyPress = (e) => {
+    if (isSocialMedia) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addSocialMedia();
+      }
+    }
+  };
 
   if (!isSocialMedia)
     return (
@@ -24,25 +33,30 @@ const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onC
           name={name}
           id={name}
           placeholder={placeholder}
-          className={errors[errorKey] ? "text-input border-red-600" : "border-Silvermist text-input"}
+          className={errors[name] ? `input ${customWidth} border-red-600` : `border-Silvermist input ${customWidth}`}
           onChange={onChange}
           value={value}
+          disabled={generatedOutput && true}
         />
-        {errors[errorKey] && <p className="error">{errors[errorKey]}</p>}
+        {errors[name] && <p className="error">{errors[name]}</p>}
       </div>
     );
 
   return (
     <div className="flex items-center gap-2">
-      <input type={type} name={name} id={name} placeholder={placeholder} onChange={onChange} ref={ref} className="socialMedia-input transition-smooth border-Silvermist" value={value} />
+      <input
+        type={type}
+        name={name}
+        id={name}
+        placeholder={placeholder}
+        onChange={onChange}
+        ref={ref}
+        className="socialMedia-input transition-smooth border-Silvermist"
+        value={value}
+        onKeyDown={handleEnterKeyPress}
+      />
 
-      <span
-        className={`px-3 py-[9.5px] capitalize rounded-md bg-Whisper text-Pewter hover:text-black transition-smooth border cursor-pointer`}
-        onClick={() =>
-          !socialMediaLink
-            ? dispatch({ type: "error", payload: { name: "socialMedia", error: `A ${name} ${name !== "website" ? "username" : "URL"} must be provided` } })
-            : dispatch({ type: "addSocialMedia" })
-        }>
+      <span className={`px-3 py-[9.5px] capitalize rounded-md bg-Whisper text-Pewter hover:text-black transition-smooth border cursor-pointer`} onClick={addSocialMedia}>
         add
       </span>
     </div>
@@ -60,6 +74,8 @@ Input.propTypes = {
   socialMediaLink: PropTypes.string,
   dispatch: PropTypes.func,
   errors: PropTypes.object,
+  generatedOutput: PropTypes.any,
+  customWidth: PropTypes.string,
 };
 
 export default Input;
