@@ -7,13 +7,15 @@ import Button from "./Button";
 import Form from "./form/Form";
 import Input from "./form/Input";
 import SocialMediaField from "./form/SocialMediaField";
+import Banner from "./modal/banners/Banner.jsx";
+import Modal from "./modal/Modal.jsx";
 
 const Main = () => {
   const smInputRef = useRef(null);
 
   const { state, dispatch } = useFormReducer();
 
-  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors } = state;
+  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput } = state;
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
@@ -26,24 +28,27 @@ const Main = () => {
 
     const hasErrors = handleValidation(state, dispatch);
 
-    console.log(errors, socialMediaLink);
-
     if (hasErrors) return;
 
     try {
       dispatch({ type: "loading", payload: true });
-      console.log(isLoading);
 
-      const result = await generateBanner(profession);
+      const result = await generateBanner(name, email, profession, socialMedia);
       console.log(result);
 
-      console.log([name, email, profession, socialMedia, socialMediaLink, socialMediaName, isLoading, errors]);
-
-      dispatch({ type: "submit" });
+      dispatch({ type: "submit", payload: result });
+      console.log([name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput]);
       dispatch({ type: "loading", payload: false });
     } catch (error) {
       console.error(error);
+    } finally {
+      dispatch({ type: "loading", payload: false });
     }
+  };
+
+  const handleReset = () => {
+    dispatch({ type: "reset" });
+    console.log([name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput]);
   };
 
   return (
@@ -54,9 +59,29 @@ const Main = () => {
       </div>
 
       <Form dispatch={handleSubmit}>
-        <Input type={"text"} placeholder={"John Doe"} name={"full name"} onChange={(e) => handleInputChange("name", e.target.value, errors, dispatch)} value={name} errors={errors} />
+        <div className="flex gap-3">
+          <Input
+            type={"text"}
+            placeholder={"John Doe"}
+            name={"name"}
+            onChange={(e) => handleInputChange("name", e.target.value, errors, dispatch)}
+            value={name}
+            customWidth={"sm:w-[245px] w-full"}
+            errors={errors}
+            generatedOutput={generatedOutput}
+          />
 
-        <Input type={"email"} placeholder={"johndoe@email.com"} name={"email"} onChange={(e) => handleInputChange("email", e.target.value, errors, dispatch)} value={email} errors={errors} />
+          <Input
+            type={"email"}
+            placeholder={"johndoe@email.com"}
+            name={"email"}
+            onChange={(e) => handleInputChange("email", e.target.value, errors, dispatch)}
+            value={email}
+            customWidth={"sm:w-[245px] w-full"}
+            errors={errors}
+            generatedOutput={generatedOutput}
+          />
+        </div>
 
         <Input
           type={"text"}
@@ -64,16 +89,18 @@ const Main = () => {
           name={"profession"}
           onChange={(e) => handleInputChange("profession", e.target.value, errors, dispatch)}
           value={profession}
+          customWidth={"sm:w-[500px] w-full"}
           errors={errors}
+          generatedOutput={generatedOutput}
         />
 
         <>
           <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide">
-            {["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
-              <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} />
+            {["facebook", "linkedin", "X (twitter)", "instagram", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
+              <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} generatedOutput={generatedOutput} />
             ))}
           </div>
-          {errors.socialMedia && <p className="error self-center">{errors.socialMedia}</p>}
+          {errors.socialMedia && <p className="self-center error">{errors.socialMedia}</p>}
         </>
 
         {socialButtonClicked && (
@@ -91,7 +118,18 @@ const Main = () => {
           />
         )}
 
-        <Button text={"generate banner"} isLoading={isLoading} />
+        <Button type={"submit"} text={"generate banner"} className={"pry-button"} isLoading={isLoading} onClick={handleSubmit} />
+
+        {generatedOutput && (
+          <Modal>
+            <Banner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} />
+
+            <div className="flex justify-center gap-8">
+              <Button type={"reset"} text={"reset"} className={"secondary-button"} onClick={handleReset} />
+              <Button type={"button"} text={"download banner"} className={"pry-button"} />
+            </div>
+          </Modal>
+        )}
       </Form>
     </main>
   );
