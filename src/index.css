@@ -9,8 +9,20 @@
     @apply box-border p-0 m-0 scroll-smooth font-comfortaa;
   }
 
-  .transition-smooth {
+  html {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  .transition-500-in-out {
     @apply transition-all duration-500 ease-in-out;
+  }
+
+  .transition-1000-in {
+    @apply transition-all duration-1000 ease-in;
   }
 }
 
@@ -19,29 +31,37 @@
     @apply h-[45px] placeholder:text-sm outline-none border focus:border-Pewter rounded-md text-base px-3 text-Pewter;
   }
 
-  .text-input {
-    @apply input sm:w-[500px] w-full;
-  }
-
   .socialMedia-input {
     @apply input sm:w-[350px] w-full;
   }
 
   .buttonWithSVG-hover:hover {
     svg {
-      @apply text-black fill-current transition-smooth;
+      @apply text-black fill-current transition-500-in-out;
     }
 
     span {
-      @apply text-black transition-smooth;
+      @apply text-black transition-500-in-out;
     }
   }
 
   .button {
-    @apply p-4 font-medium text-white capitalize rounded-md bg-DeepBlue transition-smooth;
+    @apply p-4 font-medium text-center capitalize rounded-md transition-500-in-out w-60;
+  }
+
+  .pry-button {
+    @apply text-white button bg-DeepBlue;
 
     &:hover {
       @apply bg-Bluebell;
+    }
+  }
+
+  .secondary-button {
+    @apply bg-white border button text-DeepBlue border-DeepBlue;
+
+    &:hover {
+      @apply text-white bg-DeepBlue;
     }
   }
 
