@@ -65,8 +65,15 @@ const useFormReducer = () => {
           profession: "",
           socialMediaName: "",
           socialMediaLink: "",
-          socialMedia: [],
           generatedOutput: null,
+          socialMedia: [],
+          socialButtonClicked: false,
+          errors: {
+            name: "",
+            email: "",
+            profession: "",
+            socialMedia: "",
+          },
         };
       }
       default:
