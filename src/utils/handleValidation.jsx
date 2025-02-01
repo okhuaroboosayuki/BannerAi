@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { validateEmail } from "./validateEmail";
 
 /**
@@ -13,25 +14,22 @@ export const handleValidation = (state, dispatch) => {
     {
       name: "name",
       value: state.name,
-      rules: [{ check: (val) => val.trim() !== "", message: "Name is required." }],
+      rules: [{ check: (val) => val.trim() !== "", message: "Your name is required." }],
     },
     {
       name: "email",
       value: state.email,
-      rules: [
-        { check: (val) => val.trim() !== "", message: "Email is required." },
-        { check: (val) => validateEmail(val), message: "A valid email is required." },
-      ],
+      rules: [{ check: (val) => validateEmail(val), message: "A valid email is required." }],
     },
     {
       name: "profession",
       value: state.profession,
-      rules: [{ check: (val) => val.trim() !== "", message: "Profession is required." }],
+      rules: [{ check: (val) => val.trim() !== "", message: "Your profession is required." }],
     },
     {
       name: "socialMedia",
       value: state.socialMedia,
-      rules: [{ check: (val) => val.length > 0, message: "At least one social media platform is required." }],
+      rules: [{ check: (val) => val.length > 0 && val.length <= 5, message: "Please add 1 or up to 5 social media platforms." }],
     },
   ];
 
@@ -45,6 +43,7 @@ export const handleValidation = (state, dispatch) => {
           type: "error",
           payload: { name, error: rule.message },
         });
+        toast.error(rule.message, { autoClose: 3000 });
       }
     });
   });
