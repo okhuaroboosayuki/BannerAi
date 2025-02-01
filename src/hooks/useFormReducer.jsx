@@ -31,14 +31,16 @@ const useFormReducer = () => {
         return { ...state, profession: action.payload };
       case "socialMediaLink":
         return { ...state, socialMediaLink: action.payload };
-      case "socialButtonClicked":
+      case "socialButtonClicked": {
+        const existingPlatform = state.socialMedia.find((item) => Object.keys(item).includes(action.payload));
         return {
           ...state,
           socialButtonClicked: state.socialMediaName !== action.payload,
           socialMediaName: state.socialMediaName === action.payload ? "" : action.payload,
-          socialMediaLink: state.socialMediaName !== action.payload ? "" : state.socialMediaLink,
+          socialMediaLink: state.socialMediaName !== action.payload && existingPlatform ? existingPlatform[action.payload] : "",
           errors: { ...state.errors, socialMedia: "" },
         };
+      }
       case "addSocialMedia":
         return {
           ...state,
