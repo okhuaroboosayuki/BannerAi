@@ -9,6 +9,7 @@ import Input from "./form/Input";
 import SocialMediaField from "./form/SocialMediaField";
 import Banner from "./modal/banners/Banner.jsx";
 import Modal from "./modal/Modal.jsx";
+import { ToastContainer } from "react-toastify";
 
 const Main = () => {
   const smInputRef = useRef(null);
@@ -58,6 +59,8 @@ const Main = () => {
         <p className="text-lg text-Pewter">Transform Your Profile with Stunning Ai Banners</p>
       </div>
 
+      <ToastContainer />
+
       <Form dispatch={handleSubmit}>
         <div className="flex gap-3">
           <Input
@@ -100,7 +103,6 @@ const Main = () => {
               <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} generatedOutput={generatedOutput} />
             ))}
           </div>
-          {errors.socialMedia && <p className="self-center error">{errors.socialMedia}</p>}
         </>
 
         {socialButtonClicked && (
@@ -112,7 +114,7 @@ const Main = () => {
             onChange={(e) => dispatch({ type: "socialMediaLink", payload: e.target.value })}
             dispatch={dispatch}
             socialMediaLink={socialMediaLink}
-            value={socialMediaLink}
+            value={socialMedia[socialMediaName] ? socialMedia[socialMediaName] : socialMediaLink}
             ref={smInputRef}
             key={socialMediaName}
           />
