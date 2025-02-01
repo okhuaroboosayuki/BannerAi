@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { forwardRef } from "react";
+import { toast } from "react-toastify";
 
 const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onChange, dispatch, errors, generatedOutput, customWidth }, ref) => {
   const isSocialMedia = ["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].includes(name);
@@ -7,8 +8,11 @@ const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onC
   const addSocialMedia = () => {
     if (!socialMediaLink) {
       dispatch({ type: "error", payload: { name: "socialMedia", error: `A ${name} ${name !== "website" ? "username" : "URL"} must be provided` } });
+      toast.error(`A ${name} ${name !== "website" ? "username" : "URL"} must be provided`, { autoClose: 3000 });
     } else {
       dispatch({ type: "addSocialMedia" });
+      toast.success(`Your ${name} ${name !== "website" ? "username" : "URL"} has been added successfully`, { autoClose: 3000 });
+      console.log(socialMediaLink);
     }
   };
 
@@ -38,7 +42,6 @@ const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, onC
           value={value}
           disabled={generatedOutput && true}
         />
-        {errors[name] && <p className="error">{errors[name]}</p>}
       </div>
     );
 
