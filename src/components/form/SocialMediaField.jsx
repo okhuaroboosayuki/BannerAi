@@ -1,16 +1,27 @@
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
-const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia, generatedOutput }) => {
+const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia }) => {
   const isSameName = socialMediaName === platform;
   const hasPlatformKey = socialMedia.some((item) => Object.keys(item).includes(platform));
+
+  const socialMediaEqualToFive = socialMedia.length === 5;
+
+  const handleSocialMediaClick = () => {
+    if (socialMediaEqualToFive && !hasPlatformKey) {
+      toast.error("You can only add up to 5 social media platforms.", { autoClose: 3000 });
+      return;
+    }
+
+    dispatch({ type: "socialButtonClicked", payload: platform });
+  };
 
   return (
     <div
       className={`flex items-center w-full sm:w-[116px] justify-center gap-2 px-[5px] py-[10.5px] ${
-        hasPlatformKey ? "cursor-not-allowed border border-Bluebell" : "cursor-pointer bg-Whisper buttonWithSVG-hover"
+        hasPlatformKey ? "border border-Bluebell" : ` bg-Whisper ${socialMediaEqualToFive ? "cursor-not-allowed" : "cursor-pointer buttonWithSVG-hover"}`
       } rounded-md `}
-      onClick={hasPlatformKey ? () => "" : () => dispatch({ type: "socialButtonClicked", payload: platform })}
-      style={generatedOutput ? { pointerEvents: "none", opacity: 0.9 } : {}}
+      onClick={() => handleSocialMediaClick()}
       role="button"
       tabIndex="0">
       {!isSameName ? (
@@ -32,7 +43,6 @@ SocialMediaField.propTypes = {
   dispatch: PropTypes.func,
   socialMediaName: PropTypes.string,
   socialMedia: PropTypes.array,
-  generatedOutput: PropTypes.any,
 };
 
 export default SocialMediaField;
