@@ -3,7 +3,8 @@ import { toast } from "react-toastify";
 
 const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia }) => {
   const isSameName = socialMediaName === platform;
-  const hasPlatformKey = socialMedia.some((item) => Object.keys(item).includes(platform));
+  const hasPlatformKey = socialMedia.some((item) => Object.keys(item).includes(platform)); // Check if platform key exists
+  const platformHasValue = socialMedia.some((item) => item[platform]); // Check if platform has a value
 
   const socialMediaEqualToFive = socialMedia.length === 5;
 
@@ -19,7 +20,11 @@ const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia }) 
   return (
     <div
       className={`flex items-center w-full sm:w-[116px] justify-center gap-2 px-[5px] py-[10.5px] ${
-        hasPlatformKey ? "border border-Bluebell" : ` bg-Whisper ${socialMediaEqualToFive ? "cursor-not-allowed" : "cursor-pointer buttonWithSVG-hover"}`
+        hasPlatformKey
+          ? platformHasValue !== "" // Check if the value is NOT empty
+            ? "border border-Bluebell" // If it's not empty, add a border with blue color
+            : "bg-Whisper buttonWithSVG-hover" // If it's empty, add a background color of Whisper
+          : `bg-Whisper ${socialMediaEqualToFive && !hasPlatformKey ? "cursor-not-allowed" : "cursor-pointer buttonWithSVG-hover"}` // If the platform key doesn't exist, add a background color of Whisper
       } rounded-md `}
       onClick={() => handleSocialMediaClick()}
       role="button"
