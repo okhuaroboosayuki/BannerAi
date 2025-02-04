@@ -41,15 +41,34 @@ const useFormReducer = () => {
           errors: { ...state.errors, socialMedia: "" },
         };
       }
-      case "addSocialMedia":
+      case "addSocialMedia": {
+        const newSocialMedia = { [state.socialMediaName]: state.socialMediaLink };
+        const existingPlatformIndex = state.socialMedia.findIndex((item) => Object.keys(item)[0] === state.socialMediaName);
+
+        let updatedSocialMedia;
+        if (existingPlatformIndex !== -1) {
+          // Platform exists, either update or delete
+          if (state.socialMediaLink) {
+            // Update if link is not empty
+            updatedSocialMedia = state.socialMedia.map((item, index) => (index === existingPlatformIndex ? newSocialMedia : item));
+          } else {
+            // Delete if link is empty
+            updatedSocialMedia = state.socialMedia.filter((_, index) => index !== existingPlatformIndex);
+          }
+        } else {
+          // Platform doesn't exist, add new
+          updatedSocialMedia = [...state.socialMedia, newSocialMedia];
+        }
+
         return {
           ...state,
-          socialMedia: [...state.socialMedia, { [state.socialMediaName]: state.socialMediaLink }],
+          socialMedia: updatedSocialMedia,
           socialButtonClicked: false,
           socialMediaName: "",
           socialMediaLink: "",
           errors: { ...state.errors, socialMedia: "" },
         };
+      }
       case "error":
         return { ...state, errors: { ...state.errors, [action.payload.name]: action.payload.error } };
       case "submit": {
