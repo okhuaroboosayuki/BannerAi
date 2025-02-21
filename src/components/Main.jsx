@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import useFormReducer from "../hooks/useFormReducer.jsx";
 import { generateBanner } from "../services/gemini-service.js";
 import { handleInputChange } from "../utils/handleInputChange .jsx";
@@ -9,20 +9,26 @@ import Input from "./form/Input";
 import SocialMediaField from "./form/SocialMediaField";
 import Banner from "./modal/banners/Banner.jsx";
 import Modal from "./modal/Modal.jsx";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { toPng } from "html-to-image";
 
 const Main = () => {
   const smInputRef = useRef(null);
+  const bannerRef = useRef(null);
 
   const { state, dispatch } = useFormReducer();
 
-  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput } = state;
+  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal } = state;
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
       smInputRef.current.focus();
     }
   }, [socialButtonClicked, socialMediaName]);
+
+  const handleViewModal = (value) => {
+    dispatch({ type: "modal", payload: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,23 +39,70 @@ const Main = () => {
 
     try {
       dispatch({ type: "loading", payload: true });
+      toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
       const result = await generateBanner(name, email, profession, socialMedia);
       console.log(result);
+      toast.dismiss();
 
       dispatch({ type: "submit", payload: result });
-      console.log([name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput]);
-      dispatch({ type: "loading", payload: false });
+      dispatch({ type: "modal", payload: true });
+      console.log([
+        { name: name },
+        { email: email },
+        { profession: profession },
+        { socialMedia: socialMedia },
+        { socialMediaLink: socialMediaLink },
+        { socialButtonClicked: socialButtonClicked },
+        { socialMediaName: socialMediaName },
+        { errors: errors },
+        { generatedOutput: generatedOutput },
+        { openModal: openModal },
+      ]);
     } catch (error) {
-      console.error(error);
+      toast.dismiss();
+      toast.error("An error occurred. Please try again.", { position: "top-center" });
+      console.error(error.message);
     } finally {
       dispatch({ type: "loading", payload: false });
     }
   };
 
+  const handleDownload = useCallback(() => {
+    console.log("Downloading banner");
+
+    const bannerCanvas = bannerRef.current;
+    if (!bannerCanvas) return;
+
+    dispatch({ type: "loading", payload: true });
+    toast.loading("Downloading banner", { position: "top-center", autoClose: false });
+
+    toPng(bannerCanvas, { cacheBust: true, quality: 1 })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+
+        const firstName = name.split(" ").splice(0, 1);
+        const lastName = name.split(" ").splice(-1);
+
+        if (!lastName) link.download = `${firstName}-banner.png`;
+        if (lastName) link.download = `${firstName}-${lastName}-banner.png`;
+
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error("An error occurred while downloading the banner", error);
+        toast.error("An error occurred while downloading the banner", { position: "top-center" });
+      })
+      .finally(() => {
+        toast.dismiss();
+        dispatch({ type: "loading", payload: false });
+      });
+  }, [dispatch, name]);
+
   const handleReset = () => {
     dispatch({ type: "reset" });
-    console.log([name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput]);
+    console.clear();
   };
 
   return (
@@ -59,7 +112,7 @@ const Main = () => {
         <p className="text-lg text-Pewter">Transform Your Profile with Stunning Ai Banners</p>
       </div>
 
-      <ToastContainer />
+      <ToastContainer draggable />
 
       <Form dispatch={handleSubmit}>
         <div className="flex gap-3">
@@ -114,25 +167,38 @@ const Main = () => {
             onChange={(e) => dispatch({ type: "socialMediaLink", payload: e.target.value })}
             dispatch={dispatch}
             socialMediaLink={socialMediaLink}
+            socialMedia={socialMedia}
             value={socialMedia[socialMediaName] ? socialMedia[socialMediaName] : socialMediaLink}
             ref={smInputRef}
             key={socialMediaName}
           />
         )}
 
-        <Button type={"submit"} text={"generate banner"} className={"pry-button"} isLoading={isLoading} onClick={handleSubmit} />
-
-        {generatedOutput && (
-          <Modal>
-            <Banner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} />
-
-            <div className="flex justify-center gap-8">
-              <Button type={"reset"} text={"reset"} className={"secondary-button"} onClick={handleReset} />
-              <Button type={"button"} text={"download banner"} className={"pry-button"} />
-            </div>
-          </Modal>
-        )}
+        <Button
+          type={!generatedOutput ? "submit" : "reset"}
+          text={!generatedOutput ? "generate banner" : "reset"}
+          className={!generatedOutput ? `pry-button ${generatedOutput || isLoading ? "bg-Bluebell" : ""}` : "button bg-red-700 text-white hover:bg-red-500"}
+          isLoading={isLoading}
+          onClick={!generatedOutput ? handleSubmit : handleReset}
+          disabled={isLoading}
+        />
       </Form>
+
+      {openModal && generatedOutput && (
+        <Modal>
+          <span className="self-end cursor-pointer" onClick={() => handleViewModal(false)}>
+            minimize modal
+          </span>
+
+          <Banner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
+
+          <div className="flex justify-center gap-8">
+            <Button type={"reset"} text={"reset"} className={"button bg-red-700 text-white hover:bg-red-500"} onClick={handleReset} />
+            <Button type={"button"} text={"edit"} className={"button bg-gray-500 text-white hover:bg-gray-600"} />
+            <Button type={"button"} text={"download banner"} className={"pry-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
+          </div>
+        </Modal>
+      )}
     </main>
   );
 };
