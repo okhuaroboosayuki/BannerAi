@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import useFormReducer from "../hooks/useFormReducer.jsx";
-import { generateBanner } from "../services/gemini-service.js";
+import { generateBanner } from "../services/generateBanner.js";
 import { handleInputChange } from "../utils/handleInputChange .jsx";
 import { handleValidation } from "../utils/handleValidation.jsx";
 import Button from "./Button";
