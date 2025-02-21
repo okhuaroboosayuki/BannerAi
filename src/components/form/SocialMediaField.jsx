@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
-const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia }) => {
+const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia, generatedOutput }) => {
   const isSameName = socialMediaName === platform;
   const hasPlatformKey = socialMedia.some((item) => Object.keys(item).includes(platform)); // Check if platform key exists
   const platformHasValue = socialMedia.some((item) => item[platform]); // Check if platform has a value
@@ -13,6 +13,8 @@ const SocialMediaField = ({ platform, dispatch, socialMediaName, socialMedia }) 
       toast.error("You can only add up to 5 social media platforms.", { autoClose: 3000 });
       return;
     }
+
+    if (generatedOutput) return;
 
     dispatch({ type: "socialButtonClicked", payload: platform });
   };
@@ -48,6 +50,7 @@ SocialMediaField.propTypes = {
   dispatch: PropTypes.func,
   socialMediaName: PropTypes.string,
   socialMedia: PropTypes.array,
+  generatedOutput: PropTypes.any,
 };
 
 export default SocialMediaField;
