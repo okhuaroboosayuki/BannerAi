@@ -11,6 +11,7 @@ const useFormReducer = () => {
     generatedOutput: null,
     socialMedia: [],
     socialButtonClicked: false,
+    openModal: false,
     errors: {
       name: "",
       email: "",
@@ -31,6 +32,8 @@ const useFormReducer = () => {
         return { ...state, profession: action.payload };
       case "socialMediaLink":
         return { ...state, socialMediaLink: action.payload };
+      case "modal":
+        return { ...state, openModal: action.payload };
       case "socialButtonClicked": {
         const existingPlatform = state.socialMedia.find((item) => Object.keys(item).includes(action.payload));
         return {
@@ -89,6 +92,7 @@ const useFormReducer = () => {
           generatedOutput: null,
           socialMedia: [],
           socialButtonClicked: false,
+          openModal: false,
           errors: {
             name: "",
             email: "",
