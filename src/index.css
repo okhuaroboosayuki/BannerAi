@@ -46,7 +46,7 @@
   }
 
   .button {
-    @apply p-4 font-medium text-center capitalize rounded-md transition-500-in-out w-60;
+    @apply p-3 font-medium text-center capitalize rounded-md transition-500-in-out w-60;
   }
 
   .pry-button {
