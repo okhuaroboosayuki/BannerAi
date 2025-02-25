@@ -1,14 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 import useFormReducer from "../hooks/useFormReducer.jsx";
 import { generateBanner } from "../services/generateBanner.js";
-import { handleInputChange } from "../utils/handleInputChange .jsx";
-import { handleValidation } from "../utils/handleValidation.jsx";
-import Button from "./Button";
-import Form from "./form/Form";
-import Input from "./form/Input";
-import SocialMediaField from "./form/SocialMediaField";
-import Banner from "./modal/banners/Banner.jsx";
+import { Button, Form, Input, SocialMediaField } from "./form";
+import { handleInputChange, handleValidation } from "../utils";
 import Modal from "./modal/Modal.jsx";
+import { SimpleBanner } from "./modal/banners";
 import { toast, ToastContainer } from "react-toastify";
 import { toPng } from "html-to-image";
 
@@ -190,7 +186,7 @@ const Main = () => {
             minimize modal
           </span>
 
-          <Banner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
+          <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
           <div className="flex justify-center gap-8">
             <Button type={"reset"} text={"reset"} className={"button bg-red-700 text-white hover:bg-red-500"} onClick={handleReset} />
