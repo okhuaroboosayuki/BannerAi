@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 import useFormReducer from "../hooks/useFormReducer.jsx";
 import { generateBanner } from "../services/generateBanner.js";
-import { Button, Form, Input, SocialMediaField } from "./form";
 import { handleInputChange, handleValidation } from "../utils";
-import Modal from "./modal/Modal.jsx";
-import { SimpleBanner } from "./modal/banners";
 import { toast, ToastContainer } from "react-toastify";
 import { toPng } from "html-to-image";
+import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
 
 const Main = () => {
   const smInputRef = useRef(null);
