@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { validateEmail } from "./validateEmail";
+import { validateEmail } from "../utils";
 
 /**
  * Validates form fields and dispatches errors if validation fails.
