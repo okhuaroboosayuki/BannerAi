@@ -103,7 +103,7 @@ const Main = () => {
     <main className="flex flex-col items-center justify-center w-full gap-9 sm:p-14 p-11">
       <div className="flex flex-col items-center gap-3 text-center">
         <h1 className="text-4xl font-bold sm:text-3xl text-Bluebell">Personalized Banners Designed for Your Profession</h1>
-        <p className="text-lg text-Pewter">Transform Your Profile with Stunning Ai Banners</p>
+        <p className="text-lg text-Pewter">Transform Your Profile with Stunning Banners</p>
       </div>
 
       <ToastContainer draggable />
@@ -180,13 +180,13 @@ const Main = () => {
 
       {openModal && generatedOutput && (
         <Modal>
-          <span className="self-end cursor-pointer" onClick={() => handleViewModal(false)}>
+          <span className="self-end cursor-pointer portrait:hidden landscape:block" onClick={() => handleViewModal(false)}>
             minimize modal
           </span>
 
           <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
-          <div className="flex justify-center gap-8">
+          <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden">
             <Button type={"reset"} text={"reset"} className={"button bg-red-700 text-white hover:bg-red-500"} onClick={handleReset} />
             <Button type={"button"} text={"edit"} className={"button bg-gray-500 text-white hover:bg-gray-600"} />
             <Button type={"button"} text={"download banner"} className={"pry-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
