@@ -3,7 +3,7 @@ import { socialIcons, otherIcons } from "../../../assets/icons";
 import emailIcon from "../../../assets/icons/icons8-email-50.png";
 import { forwardRef, useEffect } from "react";
 
-const Banner = forwardRef(({ name, email, profession, socialMedia, generatedOutput }, ref) => {
+const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generatedOutput }, ref) => {
   const getIcon = (platform) => {
     const iconEntry = socialIcons.find((icon) => icon.platform === platform);
     return iconEntry ? iconEntry.icon : null;
@@ -136,9 +136,9 @@ const Banner = forwardRef(({ name, email, profession, socialMedia, generatedOutp
   );
 });
 
-Banner.displayName = "Banner";
+SimpleBanner.displayName = "SimpleBanner";
 
-Banner.propTypes = {
+SimpleBanner.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
   profession: PropTypes.string,
@@ -169,4 +169,4 @@ Banner.propTypes = {
   ).isRequired,
 };
 
-export default Banner;
+export default SimpleBanner;
