@@ -24,6 +24,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = linkString;
+      link.crossOrigin = "anonymous";
 
       // Add it to the head
       document.head.appendChild(link);
@@ -36,8 +37,8 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
   }, [generatedOutput]);
 
   return (
-    <div className="w-full p-5 bg-white/50 h-[300px]">
-      <div className="flex self-center w-full h-full border transition-smooth" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }} ref={ref}>
+    <div className="w-full p-5 bg-white/50 h-[300px]" ref={ref}>
+      <div className="self-center w-full h-full border transition-smooth portrait:hidden landscape:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
         {/* social media area */}
         <div className="flex flex-col items-start justify-center w-1/4 gap-3 px-8 py-5" style={{ backgroundColor: generatedOutput[0].colors.socialMediaBgColor }}>
           {socialMediaWithoutWebSite.map((entry, index) => {
@@ -132,6 +133,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
           </div>
         </div>
       </div>
+      <p className="w-full text-lg portrait:block landscape:hidden">This banner is best viewed in landscape mode. Please rotate your device.</p>
     </div>
   );
 });
