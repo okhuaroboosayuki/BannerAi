@@ -27,6 +27,11 @@
 }
 
 @layer components {
+  .fixed-header {
+    @apply fixed top-0 left-0 z-10 w-full p-4 border-b-[0.5px] border-b-gray-300 bg-white flex justify-between items-center;
+    transition: transform 0.8s ease-in-out;
+  }
+
   .input {
     @apply h-[45px] placeholder:text-sm outline-none border focus:border-Pewter rounded-md text-base px-3 text-Pewter;
   }
@@ -46,23 +51,23 @@
   }
 
   .button {
-    @apply p-3 font-medium text-center capitalize rounded-md transition-500-in-out w-60;
+    @apply p-3 font-medium text-center capitalize border rounded-md transition-500-in-out w-60;
   }
 
-  .pry-button {
-    @apply text-white button bg-DeepBlue;
-
-    &:hover {
-      @apply bg-Bluebell;
-    }
+  .blue-button {
+    @apply text-white button bg-DeepBlue hover:bg-Bluebell;
   }
 
-  .secondary-button {
-    @apply bg-white border button text-DeepBlue border-DeepBlue;
+  .white-button {
+    @apply bg-white button text-DeepBlue border-DeepBlue hover:text-white hover:bg-DeepBlue;
+  }
 
-    &:hover {
-      @apply text-white bg-DeepBlue;
-    }
+  .grey-button {
+    @apply text-white bg-gray-500 hover:bg-gray-600 button;
+  }
+
+  .red-button {
+    @apply text-white bg-red-700 hover:bg-red-500 button;
   }
 
   .error {
@@ -77,5 +82,9 @@
     }
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+
+  .header-hidden {
+    @apply -translate-y-full;
   }
 }
