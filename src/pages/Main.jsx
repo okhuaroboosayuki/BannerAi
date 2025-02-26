@@ -20,8 +20,13 @@ const Main = () => {
     }
   }, [socialButtonClicked, socialMediaName]);
 
-  const handleViewModal = (value) => {
-    dispatch({ type: "modal", payload: value });
+  useEffect(() => {
+    if (openModal) document.body.style.overflow = "hidden";
+    if (!openModal) document.body.style.overflow = "auto";
+  }, [openModal]);
+
+  const handleViewModal = () => {
+    dispatch({ type: "modal", payload: !openModal });
   };
 
   const handleSubmit = async (e) => {
@@ -36,23 +41,14 @@ const Main = () => {
       toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
       const result = await generateBanner(name, email, profession, socialMedia);
-      console.log(result);
       toast.dismiss();
 
       dispatch({ type: "submit", payload: result });
+
+      // store result in local storage
+      localStorage.setItem("generatedOutput", JSON.stringify(result));
+
       dispatch({ type: "modal", payload: true });
-      console.log([
-        { name: name },
-        { email: email },
-        { profession: profession },
-        { socialMedia: socialMedia },
-        { socialMediaLink: socialMediaLink },
-        { socialButtonClicked: socialButtonClicked },
-        { socialMediaName: socialMediaName },
-        { errors: errors },
-        { generatedOutput: generatedOutput },
-        { openModal: openModal },
-      ]);
     } catch (error) {
       toast.dismiss();
       toast.error("An error occurred. Please try again.", { position: "top-center" });
@@ -63,8 +59,6 @@ const Main = () => {
   };
 
   const handleDownload = useCallback(() => {
-    console.log("Downloading banner");
-
     const bannerCanvas = bannerRef.current;
     if (!bannerCanvas) return;
 
@@ -85,8 +79,8 @@ const Main = () => {
         link.click();
       })
       .catch((error) => {
-        console.error("An error occurred while downloading the banner", error);
         toast.error("An error occurred while downloading the banner", { position: "top-center" });
+        console.error(error);
       })
       .finally(() => {
         toast.dismiss();
@@ -100,7 +94,7 @@ const Main = () => {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center w-full gap-9 sm:p-14 p-11">
+    <main className={`flex flex-col items-center justify-center w-full gap-6 sm:p-14 p-11 ${openModal ? "" : "mt-20 sm:mt-16"}`}>
       <div className="flex flex-col items-center gap-3 text-center">
         <h1 className="text-4xl font-bold sm:text-3xl text-Bluebell">Personalized Banners Designed for Your Profession</h1>
         <p className="text-lg text-Pewter">Transform Your Profile with Stunning Banners</p>
@@ -109,7 +103,7 @@ const Main = () => {
       <ToastContainer draggable />
 
       <Form dispatch={handleSubmit}>
-        <div className="flex gap-3">
+        <div className="flex flex-col items-center justify-center sm:flex-row gap-3 w-full">
           <Input
             type={"text"}
             placeholder={"John Doe"}
@@ -145,7 +139,7 @@ const Main = () => {
         />
 
         <>
-          <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide">
+          <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide w-full sm:w-fit">
             {["facebook", "linkedin", "X (twitter)", "instagram", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
               <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} generatedOutput={generatedOutput} />
             ))}
@@ -168,28 +162,24 @@ const Main = () => {
           />
         )}
 
-        <Button
-          type={!generatedOutput ? "submit" : "reset"}
-          text={!generatedOutput ? "generate banner" : "reset"}
-          className={!generatedOutput ? `pry-button ${generatedOutput || isLoading ? "bg-Bluebell" : ""}` : "button bg-red-700 text-white hover:bg-red-500"}
-          isLoading={isLoading}
-          onClick={!generatedOutput ? handleSubmit : handleReset}
-          disabled={isLoading}
-        />
+        {!generatedOutput ? (
+          <Button type={"submit"} text={"generate banner"} className={"blue-button mt-3"} isLoading={isLoading} onClick={handleSubmit} disabled={isLoading} />
+        ) : (
+          <div className="flex md:flex-row flex-col items-center justify-center gap-3 sm:w-[500px] w-full">
+            <Button type={"button"} text={"view results"} className={"blue-button"} onClick={handleViewModal} />
+            <Button type={"button"} text={"edit"} className={"grey-button"} />
+            <Button type={"reset"} text={"reset"} className={"red-button"} onClick={handleReset} />
+          </div>
+        )}
       </Form>
 
       {openModal && generatedOutput && (
         <Modal>
-          <span className="self-end cursor-pointer portrait:hidden landscape:block" onClick={() => handleViewModal(false)}>
-            minimize modal
-          </span>
-
           <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
           <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden">
-            <Button type={"reset"} text={"reset"} className={"button bg-red-700 text-white hover:bg-red-500"} onClick={handleReset} />
-            <Button type={"button"} text={"edit"} className={"button bg-gray-500 text-white hover:bg-gray-600"} />
-            <Button type={"button"} text={"download banner"} className={"pry-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
+            <Button type={"button"} text={"hide results"} className={"white-button"} onClick={handleViewModal} />
+            <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
           </div>
         </Modal>
       )}
