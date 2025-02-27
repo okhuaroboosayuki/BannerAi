@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
-import useFormReducer from "../hooks/useFormReducer.jsx";
-import { generateBanner } from "../services/generateBanner.js";
-import { handleInputChange, handleValidation } from "../utils";
-import { toast, ToastContainer } from "react-toastify";
-import { toPng } from "html-to-image";
+import { useEffect, useRef } from "react";
+import { handleInputChange } from "../utils";
+import { ToastContainer } from "react-toastify";
 import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
+import { useDownload, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
 
 const Main = () => {
   const smInputRef = useRef(null);
@@ -20,80 +18,13 @@ const Main = () => {
     }
   }, [socialButtonClicked, socialMediaName]);
 
-  const handleViewModal = () => {
-    dispatch({ type: "modal", payload: !openModal });
-  };
+  const { handleViewModal } = useViewModal(dispatch, openModal);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { handleSubmit } = useSubmit(state, dispatch, profession);
 
-    const hasErrors = handleValidation(state, dispatch);
+  const { handleDownload } = useDownload(bannerRef, name, dispatch);
 
-    if (hasErrors) return;
-
-    try {
-      dispatch({ type: "loading", payload: true });
-      toast.loading("Generating banner", { position: "top-center", autoClose: false });
-
-      const result = await generateBanner(profession);
-      toast.dismiss();
-
-      dispatch({ type: "submit", payload: result });
-
-      // store result in local storage
-      localStorage.setItem("generatedOutput", JSON.stringify(result));
-
-      dispatch({ type: "modal", payload: true });
-    } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred. Please try again.", { position: "top-center" });
-      console.error(error.message);
-    } finally {
-      dispatch({ type: "loading", payload: false });
-    }
-  };
-
-  const handleDownload = useCallback(() => {
-    const bannerElement = bannerRef.current;
-    if (!bannerElement) return;
-
-    const newWidth = 967; // 967px is the width of the banner to be downloaded
-
-    const originalWidth = bannerElement.offsetWidth; // original width of the banner
-
-    bannerElement.style.width = `${newWidth}px`;
-
-    dispatch({ type: "loading", payload: true });
-    toast.loading("Downloading banner", { position: "top-center", autoClose: false });
-
-    toPng(bannerElement, { cacheBust: true, quality: 1, width: newWidth, height: 300 })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-
-        const firstName = name.split(" ")[0];
-        const lastName = name.split(" ")[1];
-
-        link.download = !lastName ? `${firstName}-banner.png` : `${firstName}-${lastName}-banner.png`;
-
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((error) => {
-        toast.error("An error occurred while downloading the banner", { position: "top-center" });
-        console.error(error);
-      })
-      .finally(() => {
-        toast.dismiss();
-        dispatch({ type: "loading", payload: false });
-
-        bannerElement.style.width = `${originalWidth}px`;
-      });
-  }, [dispatch, name]);
-
-  const handleReset = () => {
-    dispatch({ type: "reset" });
-    console.clear();
-  };
+  const { handleReset } = useReset(dispatch);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
