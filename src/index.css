@@ -27,11 +27,6 @@
 }
 
 @layer components {
-  .fixed-header {
-    @apply fixed top-0 left-0 z-10 w-full p-4 border-b-[0.5px] border-b-gray-300 bg-white flex justify-between items-center;
-    transition: transform 0.8s ease-in-out;
-  }
-
   .input {
     @apply h-[45px] placeholder:text-sm outline-none border focus:border-Pewter rounded-md text-base px-3 text-Pewter;
   }
@@ -82,9 +77,5 @@
     }
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-  }
-
-  .header-hidden {
-    @apply -translate-y-full;
   }
 }
