@@ -20,11 +20,6 @@ const Main = () => {
     }
   }, [socialButtonClicked, socialMediaName]);
 
-  useEffect(() => {
-    if (openModal) document.body.style.overflow = "hidden";
-    if (!openModal) document.body.style.overflow = "auto";
-  }, [openModal]);
-
   const handleViewModal = () => {
     dispatch({ type: "modal", payload: !openModal });
   };
@@ -40,7 +35,7 @@ const Main = () => {
       dispatch({ type: "loading", payload: true });
       toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
-      const result = await generateBanner(name, email, profession, socialMedia);
+      const result = await generateBanner(profession);
       toast.dismiss();
 
       dispatch({ type: "submit", payload: result });
@@ -59,21 +54,26 @@ const Main = () => {
   };
 
   const handleDownload = useCallback(() => {
-    const bannerCanvas = bannerRef.current;
-    if (!bannerCanvas) return;
+    const bannerElement = bannerRef.current;
+    if (!bannerElement) return;
+
+    const newWidth = 967; // 967px is the width of the banner to be downloaded
+
+    const originalWidth = bannerElement.offsetWidth; // original width of the banner
+
+    bannerElement.style.width = `${newWidth}px`;
 
     dispatch({ type: "loading", payload: true });
     toast.loading("Downloading banner", { position: "top-center", autoClose: false });
 
-    toPng(bannerCanvas, { cacheBust: true, quality: 1 })
+    toPng(bannerElement, { cacheBust: true, quality: 1, width: newWidth, height: 300 })
       .then((dataUrl) => {
         const link = document.createElement("a");
 
-        const firstName = name.split(" ").splice(0, 1);
-        const lastName = name.split(" ").splice(-1);
+        const firstName = name.split(" ")[0];
+        const lastName = name.split(" ")[1];
 
-        if (!lastName) link.download = `${firstName}-banner.png`;
-        if (lastName) link.download = `${firstName}-${lastName}-banner.png`;
+        link.download = !lastName ? `${firstName}-banner.png` : `${firstName}-${lastName}-banner.png`;
 
         link.href = dataUrl;
         link.click();
@@ -85,6 +85,8 @@ const Main = () => {
       .finally(() => {
         toast.dismiss();
         dispatch({ type: "loading", payload: false });
+
+        bannerElement.style.width = `${originalWidth}px`;
       });
   }, [dispatch, name]);
 
@@ -94,7 +96,7 @@ const Main = () => {
   };
 
   return (
-    <main className={`flex flex-col items-center justify-center w-full gap-6 sm:p-14 p-11 ${openModal ? "" : "mt-20 sm:mt-16"}`}>
+    <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
       <div className="flex flex-col items-center gap-3 text-center">
         <h1 className="text-4xl font-bold sm:text-3xl text-Bluebell">Personalized Banners Designed for Your Profession</h1>
         <p className="text-lg text-Pewter">Transform Your Profile with Stunning Banners</p>
@@ -103,7 +105,7 @@ const Main = () => {
       <ToastContainer draggable />
 
       <Form dispatch={handleSubmit}>
-        <div className="flex flex-col items-center justify-center sm:flex-row gap-3 w-full">
+        <div className="flex flex-col items-center justify-center w-full gap-3 sm:flex-row">
           <Input
             type={"text"}
             placeholder={"John Doe"}
@@ -163,7 +165,7 @@ const Main = () => {
         )}
 
         {!generatedOutput ? (
-          <Button type={"submit"} text={"generate banner"} className={"blue-button mt-3"} isLoading={isLoading} onClick={handleSubmit} disabled={isLoading} />
+          <Button type={"submit"} text={"generate banner"} className={"blue-button mt-3 sm:mt-0"} isLoading={isLoading} onClick={handleSubmit} disabled={isLoading} />
         ) : (
           <div className="flex md:flex-row flex-col items-center justify-center gap-3 sm:w-[500px] w-full">
             <Button type={"button"} text={"view results"} className={"blue-button"} onClick={handleViewModal} />
@@ -177,7 +179,7 @@ const Main = () => {
         <Modal>
           <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
-          <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden">
+          <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
             <Button type={"button"} text={"hide results"} className={"white-button"} onClick={handleViewModal} />
             <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
           </div>
