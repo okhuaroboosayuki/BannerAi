@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { handleValidation } from "../utils";
 import { generateBanner } from "../services/generateBanner";
 
-const useSubmit = (state, dispatchFn, profession) => {
+const useSubmit = (state, dispatchFn, profession, editable) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,6 +22,7 @@ const useSubmit = (state, dispatchFn, profession) => {
       // store result in local storage
       localStorage.setItem("generatedOutput", JSON.stringify(result));
 
+      dispatchFn({ type: "edit", payload: !editable });
       dispatchFn({ type: "modal", payload: true });
     } catch (error) {
       toast.dismiss();
