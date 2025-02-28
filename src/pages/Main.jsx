@@ -100,7 +100,7 @@ const Main = () => {
         {!generatedOutput ? (
           <Button type={"submit"} text={"generate banner"} className={"blue-button mt-3 sm:mt-0"} isLoading={isLoading} onClick={handleSubmit} disabled={isLoading} />
         ) : (
-          <div className={`grid grid-cols-2 sm:w-[500px] w-full gap-3 `}>
+          <div className={`grid sm:grid-cols-2 sm:w-[500px] w-full gap-3 grid-cols-1 place-items-center`}>
             <Button
               type={!editable ? "button" : "submit"}
               text={!editable ? "view results" : "generate new banner"}
@@ -109,7 +109,7 @@ const Main = () => {
               isLoading={isLoading}
               disabled={isLoading}
             />
-            <Button type={"button"} text={"edit"} className={`grey-button ${!editable ? "" : "cursor-not-allowed"}`} onClick={editable ? "" : handleEdit} disabled={editable} />
+            <Button type={"button"} text={"edit"} className={`grey-button ${!editable ? "" : "cursor-not-allowed"}`} onClick={editable ? null : handleEdit} disabled={editable} />
             <Button type={"reset"} text={"reset"} className={"red-button"} onClick={handleReset} />
           </div>
         )}
