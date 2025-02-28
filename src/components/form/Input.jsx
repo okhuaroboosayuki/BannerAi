@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { forwardRef } from "react";
 import { toast } from "react-toastify";
 
-const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, socialMedia, onChange, dispatch, errors, generatedOutput, customWidth }, ref) => {
+const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, socialMedia, onChange, dispatch, errors, editable, customWidth }, ref) => {
   const isSocialMedia = ["facebook", "linkedin", "instagram", "X (twitter)", "github", "behance", "dribble", "youtube", "website"].includes(name);
 
   const addSocialMedia = () => {
@@ -46,10 +46,10 @@ const Input = forwardRef(({ type, placeholder, name, value, socialMediaLink, soc
           name={name}
           id={name}
           placeholder={placeholder}
-          className={errors[name] ? `input ${customWidth} border-red-600` : `border-Silvermist input ${customWidth}`}
+          className={errors[name] ? `input ${customWidth} border-red-600` : `border-Silvermist input ${customWidth} ${!editable ? "cursor-not-allowed bg-gray-200" : "cursor-text"}`}
           onChange={onChange}
           value={value}
-          disabled={generatedOutput && true}
+          disabled={!editable}
         />
       </div>
     );
@@ -86,7 +86,7 @@ Input.propTypes = {
   socialMediaLink: PropTypes.string,
   dispatch: PropTypes.func,
   errors: PropTypes.object,
-  generatedOutput: PropTypes.any,
+  editable: PropTypes.bool,
   customWidth: PropTypes.string,
   socialMedia: PropTypes.array,
 };
