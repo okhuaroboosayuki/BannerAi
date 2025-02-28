@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { handleInputChange } from "../utils";
 import { ToastContainer } from "react-toastify";
 import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
-import { useDownload, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
+import { useDownload, useEdit, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
 
 const Main = () => {
   const smInputRef = useRef(null);
@@ -10,7 +10,7 @@ const Main = () => {
 
   const { state, dispatch } = useFormReducer();
 
-  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal } = state;
+  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal, editable } = state;
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
@@ -20,9 +20,11 @@ const Main = () => {
 
   const { handleViewModal } = useViewModal(dispatch, openModal);
 
-  const { handleSubmit } = useSubmit(state, dispatch, profession);
+  const { handleSubmit } = useSubmit(state, dispatch, profession, editable);
 
   const { handleDownload } = useDownload(bannerRef, name, dispatch);
+
+  const { handleEdit } = useEdit(dispatch, editable);
 
   const { handleReset } = useReset(dispatch);
 
@@ -45,7 +47,7 @@ const Main = () => {
             value={name}
             customWidth={"sm:w-[245px] w-full"}
             errors={errors}
-            generatedOutput={generatedOutput}
+            editable={editable}
           />
 
           <Input
@@ -56,7 +58,7 @@ const Main = () => {
             value={email}
             customWidth={"sm:w-[245px] w-full"}
             errors={errors}
-            generatedOutput={generatedOutput}
+            editable={editable}
           />
         </div>
 
@@ -68,13 +70,13 @@ const Main = () => {
           value={profession}
           customWidth={"sm:w-[500px] w-full"}
           errors={errors}
-          generatedOutput={generatedOutput}
+          editable={editable}
         />
 
         <>
           <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide w-full sm:w-fit">
             {["facebook", "linkedin", "X (twitter)", "instagram", "github", "behance", "dribble", "youtube", "website"].map((platform) => (
-              <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} generatedOutput={generatedOutput} />
+              <SocialMediaField key={platform} platform={platform} socialMedia={socialMedia} dispatch={dispatch} socialMediaName={socialMediaName} editable={editable} />
             ))}
           </div>
         </>
@@ -98,9 +100,16 @@ const Main = () => {
         {!generatedOutput ? (
           <Button type={"submit"} text={"generate banner"} className={"blue-button mt-3 sm:mt-0"} isLoading={isLoading} onClick={handleSubmit} disabled={isLoading} />
         ) : (
-          <div className="flex md:flex-row flex-col items-center justify-center gap-3 sm:w-[500px] w-full">
-            <Button type={"button"} text={"view results"} className={"blue-button"} onClick={handleViewModal} />
-            <Button type={"button"} text={"edit"} className={"grey-button"} />
+          <div className={`grid grid-cols-2 sm:w-[500px] w-full gap-3 `}>
+            <Button
+              type={!editable ? "button" : "submit"}
+              text={!editable ? "view results" : "generate new banner"}
+              className={"blue-button"}
+              onClick={!editable ? handleViewModal : handleSubmit}
+              isLoading={isLoading}
+              disabled={isLoading}
+            />
+            <Button type={"button"} text={"edit"} className={`grey-button ${!editable ? "" : "cursor-not-allowed"}`} onClick={editable ? "" : handleEdit} disabled={editable} />
             <Button type={"reset"} text={"reset"} className={"red-button"} onClick={handleReset} />
           </div>
         )}
