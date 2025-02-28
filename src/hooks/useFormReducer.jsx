@@ -12,6 +12,7 @@ const useFormReducer = () => {
     socialMedia: [],
     socialButtonClicked: false,
     openModal: false,
+    editable: true,
     errors: {
       name: "",
       email: "",
@@ -81,6 +82,8 @@ const useFormReducer = () => {
           generatedOutput: action.payload,
         };
       }
+      case "edit":
+        return { ...state, editable: action.payload };
       case "reset": {
         return {
           ...state,
@@ -93,6 +96,7 @@ const useFormReducer = () => {
           socialMedia: [],
           socialButtonClicked: false,
           openModal: false,
+          editable: true,
           errors: {
             name: "",
             email: "",
