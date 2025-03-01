@@ -110,7 +110,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
             </div>
 
             {/* quote area */}
-            <div className="flex items-center justify-center sm:w-[300px] md:w-[350px] lg:w-[400px]">
+            <div className="flex items-start justify-start sm:w-[300px] md:w-[350px] lg:w-[400px]">
               <em
                 className={`text-sm before:content-['"'] after:content-['"'] before:text-2xl after:text-2xl before:mr-0.5 after:ml-0.5`}
                 style={{
