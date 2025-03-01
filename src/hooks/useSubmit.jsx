@@ -14,8 +14,17 @@ const useSubmit = (state, dispatchFn, profession, editable) => {
       dispatchFn({ type: "loading", payload: true });
       toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
+      // check if editable is true and there is a generated output in local storage
+      const generatedOutputInLocalStorage = JSON.parse(localStorage.getItem("generatedOutput"));
+      if (editable && generatedOutputInLocalStorage) {
+        dispatchFn({ type: "submit", payload: generatedOutputInLocalStorage });
+        dispatchFn({ type: "modal", payload: true });
+        dispatchFn({ type: "loading", payload: false });
+        dispatchFn({ type: "edit", payload: !editable });
+        return;
+      }
+
       const result = await generateBanner(profession);
-      toast.dismiss();
 
       dispatchFn({ type: "submit", payload: result });
 
@@ -26,9 +35,10 @@ const useSubmit = (state, dispatchFn, profession, editable) => {
       dispatchFn({ type: "modal", payload: true });
     } catch (error) {
       toast.dismiss();
-      toast.error("An error occurred. Please try again.", { position: "top-center" });
+      toast.error("An error occurred. Please try again.", { position: "top-center", autoClose: false });
       console.error(error.message);
     } finally {
+      toast.dismiss();
       dispatchFn({ type: "loading", payload: false });
     }
   };
