@@ -2,6 +2,15 @@ import { toast } from "react-toastify";
 import { handleValidation } from "../utils";
 import { generateBanner } from "../services/generateBanner";
 
+/**
+ * Custom hook to handle form submission and banner generation.
+ * @param {object} state - The state object
+ * @param {function} dispatchFn - The dispatch function
+ * @param {string} profession - The profession
+ * @param {boolean} editable - The editable state
+ * @returns {object} The handleSubmit function
+ */
+
 const useSubmit = (state, dispatchFn, profession, editable) => {
   const handleSubmit = async (e) => {
     e.preventDefault();

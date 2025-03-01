@@ -95,6 +95,12 @@ const schema = {
   },
 };
 
+/**
+ * Generates a banner based on the profession provided using Google Generative AI
+ * @param {string} profession - The profession
+ * @returns {Promise<object>} The generated banner
+ */
+
 export const generateBanner = async (profession) => {
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
 

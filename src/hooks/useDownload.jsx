@@ -2,6 +2,14 @@ import { toPng } from "html-to-image";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
 
+/**
+ * Custom hook to handle downloading the banner as an image.
+ * @param {object} bannerRef - The banner reference
+ * @param {string} name - The name of the user
+ * @param {function} dispatchFn - The dispatch function
+ * @returns {object} The handleDownload function
+ */
+
 const useDownload = (bannerRef, name, dispatchFn) => {
   const handleDownload = useCallback(() => {
     const bannerElement = bannerRef.current;
