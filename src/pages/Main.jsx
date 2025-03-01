@@ -103,7 +103,7 @@ const Main = () => {
           <div className={`grid sm:grid-cols-2 sm:w-[500px] w-full gap-3 grid-cols-1 place-items-center`}>
             <Button
               type={!editable ? "button" : "submit"}
-              text={!editable ? "view results" : "generate new banner"}
+              text={!editable ? "view results" : "view new results"}
               className={"blue-button"}
               onClick={!editable ? handleViewModal : handleSubmit}
               isLoading={isLoading}
