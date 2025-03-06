@@ -1,3 +1,5 @@
+import { truncateFilename } from "../utils";
+
 const useAddImage = (imageInputRef, dispatchFn) => {
   const handleAddImage = () => {
     imageInputRef.current.click();
@@ -7,9 +9,10 @@ const useAddImage = (imageInputRef, dispatchFn) => {
 
       if (file) {
         const imageUrl = URL.createObjectURL(file);
+        const shortFileName = truncateFilename(file.name, 15);
 
         dispatchFn({ type: "image", payload: imageUrl });
-        dispatchFn({ type: "imageInputName", payload: file.name });
+        dispatchFn({ type: "imageInputName", payload: shortFileName });
       }
 
       imageInputRef.current.value = null;
@@ -19,7 +22,12 @@ const useAddImage = (imageInputRef, dispatchFn) => {
     imageInputRef.current.addEventListener("change", handleFileChange);
   };
 
-  return { handleAddImage };
+  const clearImageInput = () => {
+    dispatchFn({ type: "image", payload: "" });
+    dispatchFn({ type: "imageInputName", payload: "choose image" });
+  };
+
+  return { handleAddImage, clearImageInput };
 };
 
 export default useAddImage;

@@ -3,6 +3,7 @@ import { handleInputChange } from "../utils";
 import { ToastContainer } from "react-toastify";
 import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
 import { useAddImage, useDownload, useEdit, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
+import cancelIcon from "../assets/icons/icons8-cancel-red.svg";
 
 const Main = () => {
   const smInputRef = useRef(null);
@@ -38,7 +39,7 @@ const Main = () => {
 
   const { handleReset } = useReset(dispatch);
 
-  const { handleAddImage } = useAddImage(imageInputRef, dispatch);
+  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
@@ -90,16 +91,20 @@ const Main = () => {
               image <span className="text-xs">(optional)</span>
             </label>
 
-            <button
-              type="button"
-              className={`border-Silvermist input sm:w-[245px] w-full text-start ${imageInputName !== "choose image" ? "lowercase" : "capitalize"} text-sm text-gray-400 ${
-                !editable ? "cursor-not-allowed bg-gray-200" : "cursor-pointer"
-              }`}
-              onClick={handleAddImage}
-              disabled={!editable}>
-              {imageInputName}
-              <input type="file" name="image" id="image" className="hidden" accept="image/*" ref={imageInputRef} />
-            </button>
+            <div className={`flex items-center justify-between border-Silvermist input sm:w-[245px] w-full text-sm text-gray-400 ${!editable ? "bg-gray-200" : ""}`}>
+              <button
+                type="button"
+                className={`${imageInputName !== "choose image" ? "lowercase" : "capitalize"} ${!editable ? "cursor-not-allowed" : "cursor-pointer"}`}
+                onClick={handleAddImage}
+                disabled={!editable}>
+                {imageInputName}
+                <input type="file" name="image" id="image" className="hidden" accept="image/*" ref={imageInputRef} />
+              </button>
+
+              <span className={image && imageInputName !== "choose image" ? "block cursor-pointer" : "hidden"} onClick={clearImageInput}>
+                <img src={cancelIcon} alt="clear input icon" width={20} height={20} />
+              </span>
+            </div>
           </div>
         </div>
 
