@@ -90,8 +90,13 @@ const schema = {
         },
         required: ["text", "textColor"],
       },
+      category: {
+        type: SchemaType.STRING,
+        description: "Category that best represents the profession",
+        nullable: false,
+      },
     },
-    required: ["colors", "fontFamily", "fontSize", "quote"],
+    required: ["colors", "fontFamily", "fontSize", "quote", "category"],
   },
 };
 
@@ -110,7 +115,8 @@ export const generateBanner = async (profession) => {
     1. Select an appropriate color palette for the user's profession, ensuring the colors are vibrant, complementary, and suitable for creating visually captivating social media profile banners. The "socialMediaBgColor" must always be black or a dark shade of any color, and the "socialMediaTextColor" must always be white or whatever color that contrasts with the "socialMediaBgColor". All colors must be represented as valid HEX codes.
     2. Choose a suitable font family from "fonts.google.com" that aligns with the tone and aesthetic of the profession. Provide the necessary embed links for integration into a document head.
     3. Specify font sizes in "rem" for the text and heading, ensuring they are proportionate and readable for a social media banner.
-    4. Write an inspiring and motivational quote tailored to the user's profession, keeping it professional. The "quote text" must be a dark shade of any color that blends well with the "generalBgColor". The quote can be a famous saying, a personal motto, a reflection of the profession's values, a call to action, a greek proverb, a quote from a famous person, or any other inspirational message. Do not include any personal information, specific names, or authorship in the quote.`,
+    4. Write an inspiring and motivational quote tailored to the user's profession, keeping it professional. The "quote text" must be a dark shade of any color that blends well with the "generalBgColor". The quote can be a famous saying, a personal motto, a reflection of the profession's values, a call to action, a greek proverb, a quote from a famous person, or any other inspirational message. Do not include any personal information, specific names, or authorship in the quote.
+    5. Determine the most appropriate category for the profession based on the provided list`,
     generationConfig: {
       responseMimeType: "application/json",
       responseSchema: schema,
@@ -136,10 +142,30 @@ export const generateBanner = async (profession) => {
   
   4. An **inspirational quote** tailored to the profession, designed to motivate and resonate with individuals in that field.
       - "textColor": A dark shade of any color that blends well with the "generalBgColor".
-  
+
+  5. **Category**:
+      - Select the most appropriate category for the profession from the following list:
+        - Creative
+        - Technical
+        - Business
+        - Medical
+        - Legal
+        - Educational
+        - Social
+        - Environmental
+        - Other
+    Provide the category that best represents the profession.
+
   Ensure all elements are cohesive, visually appealing, and tailored for use in a professional social media profile banner.`;
 
   const result = await model.generateContent(prompt);
 
   return JSON.parse(result.response.text());
 };
+
+//Healthcare
+// Technology
+// Business
+// Education
+// Arts
+// Legal
