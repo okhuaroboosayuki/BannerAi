@@ -2,21 +2,31 @@ import { useEffect, useRef } from "react";
 import { handleInputChange } from "../utils";
 import { ToastContainer } from "react-toastify";
 import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
-import { useDownload, useEdit, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
+import { useAddImage, useDownload, useEdit, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
 
 const Main = () => {
   const smInputRef = useRef(null);
   const bannerRef = useRef(null);
+  const imageInputRef = useRef(null);
 
   const { state, dispatch } = useFormReducer();
 
-  const { isLoading, name, email, profession, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal, editable } = state;
+  const { isLoading, name, email, profession, image, imageInputName, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal, editable } = state;
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
       smInputRef.current.focus();
     }
   }, [socialButtonClicked, socialMediaName]);
+
+  useEffect(() => {
+    return () => {
+      if (image) {
+        // frees up memory space when the component unmounts or the image is changed to a new one to prevent memory leaks and improve performance by removing the image from the browser's memory space.
+        URL.revokeObjectURL(image);
+      }
+    };
+  }, [image]);
 
   const { handleViewModal } = useViewModal(dispatch, openModal);
 
@@ -27,6 +37,8 @@ const Main = () => {
   const { handleEdit } = useEdit(dispatch, editable);
 
   const { handleReset } = useReset(dispatch);
+
+  const { handleAddImage } = useAddImage(imageInputRef, dispatch);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
@@ -61,17 +73,35 @@ const Main = () => {
             editable={editable}
           />
         </div>
+        <div className="flex flex-col items-center justify-center w-full gap-3 sm:flex-row">
+          <Input
+            type={"text"}
+            placeholder={"Sales Specialist"}
+            name={"profession"}
+            onChange={(e) => handleInputChange("profession", e.target.value, errors, dispatch)}
+            value={profession}
+            customWidth={"sm:w-[245px] w-full"}
+            errors={errors}
+            editable={editable}
+          />
 
-        <Input
-          type={"text"}
-          placeholder={"Sales Specialist"}
-          name={"profession"}
-          onChange={(e) => handleInputChange("profession", e.target.value, errors, dispatch)}
-          value={profession}
-          customWidth={"sm:w-[500px] w-full"}
-          errors={errors}
-          editable={editable}
-        />
+          <div className="flex flex-col items-center w-full gap-1 sm:w-fit">
+            <label htmlFor="image" className="self-start capitalize">
+              image <span className="text-xs">(optional)</span>
+            </label>
+
+            <button
+              type="button"
+              className={`border-Silvermist input sm:w-[245px] w-full text-start ${imageInputName !== "choose image" ? "lowercase" : "capitalize"} text-sm text-gray-400 ${
+                !editable ? "cursor-not-allowed bg-gray-200" : "cursor-pointer"
+              }`}
+              onClick={handleAddImage}
+              disabled={!editable}>
+              {imageInputName}
+              <input type="file" name="image" id="image" className="hidden" accept="image/*" ref={imageInputRef} />
+            </button>
+          </div>
+        </div>
 
         <>
           <div className="grid grid-cols-2 gap-3 px-3 sm:grid-cols-4 h-[200px] sm:h-fit overflow-y-scroll scrollbar-hide w-full sm:w-fit">
