@@ -6,6 +6,8 @@ const useFormReducer = () => {
     name: "",
     email: "",
     profession: "",
+    image: "",
+    imageInputName: "choose image",
     socialMediaName: "",
     socialMediaLink: "",
     generatedOutput: null,
@@ -31,6 +33,10 @@ const useFormReducer = () => {
         return { ...state, email: action.payload };
       case "profession":
         return { ...state, profession: action.payload };
+      case "image":
+        return { ...state, image: action.payload };
+      case "imageInputName":
+        return { ...state, imageInputName: action.payload };
       case "socialMediaLink":
         return { ...state, socialMediaLink: action.payload };
       case "modal":
@@ -78,7 +84,7 @@ const useFormReducer = () => {
       case "submit": {
         return {
           ...state,
-          errors: { name: "", email: "", profession: "", socialMedia: "" },
+          errors: { name: "", email: "", profession: "", socialMedia: "", image: "" },
           generatedOutput: action.payload,
         };
       }
@@ -90,6 +96,8 @@ const useFormReducer = () => {
           name: "",
           email: "",
           profession: "",
+          image: "",
+          imageInputName: "choose image",
           socialMediaName: "",
           socialMediaLink: "",
           generatedOutput: null,
@@ -101,6 +109,7 @@ const useFormReducer = () => {
             name: "",
             email: "",
             profession: "",
+            image: "",
             socialMedia: "",
           },
         };
