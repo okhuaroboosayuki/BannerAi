@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { handleInputChange } from "../utils";
+import { handleInputChange, truncateFilename } from "../utils";
 import { ToastContainer } from "react-toastify";
-import { Button, Form, Input, Modal, SimpleBanner, SocialMediaField } from "../components";
+import { Button, Form, Input, Modal, SocialMediaField } from "../components";
 import { useAddImage, useDownload, useEdit, useFormReducer, useReset, useSubmit, useViewModal } from "../hooks";
 import cancelIcon from "../assets/icons/icons8-cancel-red.svg";
 
@@ -20,26 +20,17 @@ const Main = () => {
     }
   }, [socialButtonClicked, socialMediaName]);
 
-  useEffect(() => {
-    return () => {
-      if (image) {
-        // frees up memory space when the component unmounts or the image is changed to a new one to prevent memory leaks and improve performance by removing the image from the browser's memory space.
-        URL.revokeObjectURL(image);
-      }
-    };
-  }, [image]);
-
   const { handleViewModal } = useViewModal(dispatch, openModal);
 
-  const { handleSubmit } = useSubmit(state, dispatch, profession, editable);
+  const { handleSubmit } = useSubmit(state, dispatch, profession, editable, image);
 
   const { handleDownload } = useDownload(bannerRef, name, dispatch);
 
   const { handleEdit } = useEdit(dispatch, editable);
 
-  const { handleReset } = useReset(dispatch);
+  const { handleReset } = useReset(image, imageInputName, dispatch);
 
-  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch);
+  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch, image, imageInputName);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
@@ -91,19 +82,24 @@ const Main = () => {
               image <span className="text-xs">(optional)</span>
             </label>
 
-            <div className={`flex items-center justify-between border-Silvermist input sm:w-[245px] w-full text-sm text-gray-400 ${!editable ? "bg-gray-200" : ""}`}>
+            <div
+              className={`flex items-center justify-between border-Silvermist input sm:w-[245px] w-full text-sm text-gray-400 ${!editable ? "bg-gray-200 cursor-not-allowed" : ""}`}
+              title="*jpg, *jpeg, *png, or *webp">
               <button
                 type="button"
                 className={`${imageInputName !== "choose image" ? "lowercase" : "capitalize"} ${!editable ? "cursor-not-allowed" : "cursor-pointer"}`}
                 onClick={handleAddImage}
-                disabled={!editable}>
-                {imageInputName}
+                disabled={!editable || isLoading}>
+                {truncateFilename(imageInputName, 15)}
                 <input type="file" name="image" id="image" className="hidden" accept="image/*" ref={imageInputRef} />
               </button>
 
-              <span className={image && imageInputName !== "choose image" ? "block cursor-pointer" : "hidden"} onClick={clearImageInput}>
+              <button
+                className={image || imageInputName !== "choose image" ? `block ${!editable ? "cursor-not-allowed" : "cursor-pointer"}` : "hidden"}
+                onClick={editable ? clearImageInput : undefined}
+                disabled={!editable || isLoading}>
                 <img src={cancelIcon} alt="clear input icon" width={20} height={20} />
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -144,22 +140,34 @@ const Main = () => {
               isLoading={isLoading}
               disabled={isLoading}
             />
-            <Button type={"button"} text={"edit"} className={`grey-button ${!editable ? "" : "cursor-not-allowed"}`} onClick={editable ? null : handleEdit} disabled={editable} />
+            <Button type={"button"} text={"edit"} className={`grey-button ${!editable ? "" : "cursor-not-allowed"}`} onClick={editable ? undefined : handleEdit} disabled={editable} />
             <Button type={"reset"} text={"reset"} className={"red-button"} onClick={handleReset} />
           </div>
         )}
       </Form>
 
       {openModal && generatedOutput && (
-        <Modal>
-          <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
+        <Modal
+          name={name}
+          email={email}
+          image={image}
+          profession={profession}
+          socialMedia={socialMedia}
+          generatedOutput={generatedOutput}
+          bannerRef={bannerRef}
+          isLoading={isLoading}
+          onViewModal={handleViewModal}
+          onDownload={handleDownload}
+        />
+      )}
+      {/* <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
           <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
             <Button type={"button"} text={"hide results"} className={"white-button"} onClick={handleViewModal} />
             <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
           </div>
         </Modal>
-      )}
+      )} */}
     </main>
   );
 };
