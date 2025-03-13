@@ -1,15 +1,45 @@
 import PropTypes from "prop-types";
+import { Button, CreativeBanner, SimpleBanner } from "../../components";
 
-const Modal = ({ children }) => {
-  return (
-    <div className="absolute top-0 left-0 z-50 flex flex-col items-center w-full h-full py-5 xl:h-screen portrait:justify-start lg:py-10 md:px-8 lg:px-28 xl:py-20 justify-evenly xl:px-60 bg-Silvermist/90">
-      {children}
-    </div>
-  );
+const Modal = ({ name, email, image, profession, socialMedia, generatedOutput, bannerRef, isLoading, onViewModal, onDownload }) => {
+  if (!image) {
+    return (
+      <div className="modal">
+        <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
+
+        <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
+          <Button type={"button"} text={"hide results"} className={"white-button"} onClick={onViewModal} />
+          <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
+        </div>
+      </div>
+    );
+  }
+
+  if (image) {
+    return (
+      <div className="modal">
+        <CreativeBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} image={image} ref={bannerRef} />
+
+        <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
+          <Button type={"button"} text={"hide results"} className={"white-button"} onClick={onViewModal} />
+          <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
+        </div>
+      </div>
+    );
+  }
 };
 
 Modal.propTypes = {
-  children: PropTypes.node.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  profession: PropTypes.string.isRequired,
+  socialMedia: PropTypes.array.isRequired,
+  generatedOutput: PropTypes.array.isRequired,
+  bannerRef: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  onViewModal: PropTypes.func.isRequired,
+  onDownload: PropTypes.func.isRequired,
 };
 
 export default Modal;
