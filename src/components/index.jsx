@@ -5,3 +5,4 @@ export { default as SimpleBanner } from "./modal/banners/SimpleBanner";
 export { default as Form } from "./form/Form";
 export { default as Input } from "./form/Input";
 export { default as SocialMediaField } from "./form/SocialMediaField";
+export { default as CreativeBanner } from "./modal/banners/CreativeBanner";
