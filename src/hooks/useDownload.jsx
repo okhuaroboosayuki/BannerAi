@@ -35,13 +35,15 @@ const useDownload = (bannerRef, name, dispatchFn) => {
 
         link.href = dataUrl;
         link.click();
+
+        toast.dismiss();
+        toast.success("Banner downloaded successfully", { position: "top-center", autoClose: 3000 });
       })
       .catch((error) => {
-        toast.error("An error occurred while downloading the banner", { position: "top-center" });
+        toast.error("An error occurred while downloading the banner", { position: "top-center", autoClose: false });
         console.error(error);
       })
       .finally(() => {
-        toast.dismiss();
         dispatchFn({ type: "loading", payload: false });
 
         bannerElement.style.width = `${originalWidth}px`;
