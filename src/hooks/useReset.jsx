@@ -18,8 +18,11 @@ const useReset = (image, imageInputName, dispatchFn) => {
 
     if (image) {
       const { error } = supabase.storage.from("image-store").remove(imageInputName);
-      toast.error(error.message);
-      console.log(error);
+
+      if (error) {
+        toast.error(error.message);
+        console.log(error);
+      }
     }
 
     console.clear();
