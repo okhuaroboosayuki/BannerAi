@@ -22,7 +22,7 @@ const Main = () => {
 
   const { handleViewModal } = useViewModal(dispatch, openModal);
 
-  const { handleSubmit } = useSubmit(state, dispatch, profession, editable, image);
+  const { handleSubmit } = useSubmit(state, dispatch, profession, editable);
 
   const { handleDownload } = useDownload(bannerRef, name, dispatch);
 
@@ -41,7 +41,7 @@ const Main = () => {
 
       <ToastContainer draggable />
 
-      <Form dispatch={handleSubmit}>
+      <Form>
         <div className="flex flex-col items-center justify-center w-full gap-3 sm:flex-row">
           <Input
             type={"text"}
