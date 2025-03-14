@@ -9,15 +9,13 @@ import supabase from "../services/supabase";
  * @param {function} dispatchFn - The dispatch function
  * @param {string} profession - The profession
  * @param {boolean} editable - The editable state
+ * @param {File | URL} image - The image state
  * @returns {object} The handleSubmit function
  */
 
 const useSubmit = (state, dispatchFn, profession, editable, image) => {
   async function uploadImage() {
-    const { data, error } = await supabase.storage.from("image-store").upload(image.name, image);
-
-    console.log(data);
-    console.log(error);
+    const { error } = await supabase.storage.from("image-store").upload(image.name, image);
 
     if (error) {
       if (error.message === "The object exceeded the maximum allowed size") {
