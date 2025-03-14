@@ -41,7 +41,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
     <div className="w-full p-5 bg-white/50 h-[300px] flex flex-col items-center justify-center" ref={ref}>
       <div className="self-center w-full h-full border transition-smooth portrait:hidden landscape:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
         {/* social media area */}
-        <div className="flex flex-col items-start justify-center w-1/4 gap-3 px-8 py-5" style={{ backgroundColor: generatedOutput[0].colors.socialMediaBgColor }}>
+        <div className="flex flex-col items-start justify-center w-1/4 gap-3 px-3 py-5" style={{ backgroundColor: generatedOutput[0].colors.socialMediaBgColor }}>
           {socialMediaWithoutWebSite
             .sort(() => Math.random() - 0.5)
             .map((entry, index) => {
@@ -50,11 +50,11 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
               const icon = getIcon(platform);
 
               return (
-                <div key={index} className="flex items-center justify-start gap-3 text-sm w-full" style={{ color: generatedOutput[0].colors.socialMediaTextColor }}>
+                <div key={index} className="flex items-center justify-start w-full gap-3 text-sm" style={{ color: generatedOutput[0].colors.socialMediaTextColor }}>
                   {icon && <img src={icon} alt={`${platform}'s icon`} height={30} width={30} />}
 
-                  <span style={{ fontFamily: generatedOutput[0].fontFamily.declaration }} className="w-3/4">
-                    {username}
+                  <span style={{ fontFamily: generatedOutput[0].fontFamily.declaration }} className="flex items-center w-full h-full">
+                    {username.toLowerCase()}
                   </span>
                 </div>
               );
@@ -63,11 +63,11 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
         {/* main area */}
         <div className="flex justify-between w-full">
-          <div className="flex flex-1 flex-col items-center justify-around p-9 gap-5 w-full">
+          <div className="flex flex-col items-center justify-around flex-1 w-full gap-5 p-9">
             {/* name & email */}
-            <div className="flex items-center justify-between w-full gap-3">
+            <div className="flex items-center justify-between w-full gap-8">
               <h1
-                className="flex flex-col items-start text-6xl font-extrabold capitalize gap-2"
+                className="flex flex-col items-start gap-2 text-6xl font-extrabold capitalize"
                 style={{ color: generatedOutput[0].colors.textColor, fontFamily: generatedOutput[0].fontFamily.declaration }}>
                 I&apos;m <br />
                 {firstName}
@@ -79,10 +79,8 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
             </div>
 
             {/* profession & website */}
-            <div
-              className="self-start w-full capitalize flex items-center justify-between"
-              style={{ color: generatedOutput[0].colors.textColor, fontFamily: generatedOutput[0].fontFamily.declaration }}>
-              <p>{profession}</p>
+            <div className="flex items-center self-start justify-between w-full gap-2" style={{ color: generatedOutput[0].colors.textColor, fontFamily: generatedOutput[0].fontFamily.declaration }}>
+              <p className="w-[50%] capitalize flex items-center h-full">{profession}</p>
 
               <img src={arrowRight} alt="arrow facing the right hand side" />
 
@@ -92,9 +90,9 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
                   const website = entry[platform];
 
                   return (
-                    <span key={entry} className="lowercase">
+                    <p key={entry} className="flex items-center h-full lowercase">
                       {website}
-                    </span>
+                    </p>
                   );
                 })}
             </div>
@@ -102,7 +100,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
           {/* image area */}
           <div className="h-full">
-            <img src={image} alt="profile" className="w-full h-full object-cover" />
+            <img src={image} alt="profile" className="object-cover w-full h-full" />
           </div>
         </div>
       </div>
