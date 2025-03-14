@@ -1,12 +1,18 @@
 import supabase from "../services/supabase";
 
 const useAddImage = (imageInputRef, dispatchFn, image, imageInputName) => {
+  const containsURL = image instanceof File;
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
     if (!file) {
       cleanUp();
       return;
+    }
+
+    if (imageInputName !== "choose image" && !containsURL) {
+      deleteImageFromDB();
     }
 
     if (file) {
@@ -20,18 +26,19 @@ const useAddImage = (imageInputRef, dispatchFn, image, imageInputName) => {
     imageInputRef.current.removeEventListener("change", handleFileChange);
   }
 
+  async function deleteImageFromDB() {
+    const { error } = await supabase.storage.from("image-store").remove([imageInputName]);
+    if (error) console.error(error);
+  }
+
   const handleAddImage = () => {
     imageInputRef.current.click();
     imageInputRef.current.addEventListener("change", handleFileChange);
   };
 
   const clearImageInput = async () => {
-    const containsWebLink = image instanceof File;
-
-    if (!containsWebLink) {
-      const { error } = await supabase.storage.from("image-store").remove([imageInputName]);
-      console.log("image cleared");
-      if (error) console.log(error);
+    if (!containsURL) {
+      deleteImageFromDB();
 
       dispatchFn({ type: "image", payload: "" });
       dispatchFn({ type: "imageInputName", payload: "choose image" });
