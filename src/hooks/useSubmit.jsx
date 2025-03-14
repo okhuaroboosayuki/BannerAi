@@ -13,9 +13,9 @@ import supabase from "../services/supabase";
  * @returns {object} The handleSubmit function
  */
 
-const useSubmit = (state, dispatchFn, profession, editable, image) => {
+const useSubmit = (state, dispatchFn, profession, editable) => {
   async function uploadImage() {
-    const { error } = await supabase.storage.from("image-store").upload(image.name, image);
+    const { error } = await supabase.storage.from("image-store").upload(state.image.name, state.image);
 
     if (error) {
       if (error.message === "The object exceeded the maximum allowed size") {
@@ -29,8 +29,7 @@ const useSubmit = (state, dispatchFn, profession, editable, image) => {
       }
     }
 
-    const { data: url } = supabase.storage.from("image-store").getPublicUrl(`${image.name}`);
-    console.log(url);
+    const { data: url } = supabase.storage.from("image-store").getPublicUrl(`${state.image.name}`);
 
     dispatchFn({ type: "image", payload: url.publicUrl });
   }
@@ -46,7 +45,7 @@ const useSubmit = (state, dispatchFn, profession, editable, image) => {
       dispatchFn({ type: "loading", payload: true });
       toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
-      if (image instanceof File) await uploadImage();
+      if (state.image instanceof File) await uploadImage();
 
       // check if editable is true and there is a generated output in local storage
       const generatedOutputInLocalStorage = JSON.parse(localStorage.getItem("generatedOutput"));
