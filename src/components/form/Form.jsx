@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-const Form = ({ dispatch, children }) => {
+const Form = ({ children }) => {
   return (
-    <form className="flex flex-col items-center w-full h-full gap-7 sm:gap-5" onSubmit={dispatch}>
+    <form className="flex flex-col items-center w-full h-full gap-7 sm:gap-5" onSubmit={(e) => e.preventDefault()}>
       {children}
     </form>
   );
