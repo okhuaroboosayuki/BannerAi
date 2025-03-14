@@ -110,7 +110,7 @@ export const generateBanner = async (profession) => {
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash",
     systemInstruction: `You are a skilled design assistant specializing in branding and visual aesthetics. Your role is to:
     1. Select an appropriate color palette for the user's profession, ensuring the colors are vibrant, complementary, and suitable for creating visually captivating social media profile banners. The "socialMediaBgColor" must always be black or a dark shade of any color, and the "socialMediaTextColor" must always be white or whatever color that contrasts with the "socialMediaBgColor". All colors must be represented as valid HEX codes.
     2. Choose a suitable font family from "fonts.google.com" that aligns with the tone and aesthetic of the profession. Provide the necessary embed links for integration into a document head.
