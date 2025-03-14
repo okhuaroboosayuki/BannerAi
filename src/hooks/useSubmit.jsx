@@ -48,7 +48,7 @@ const useSubmit = (state, dispatchFn, profession, editable, image) => {
       dispatchFn({ type: "loading", payload: true });
       toast.loading("Generating banner", { position: "top-center", autoClose: false });
 
-      if (image) await uploadImage();
+      if (image instanceof File) await uploadImage();
 
       // check if editable is true and there is a generated output in local storage
       const generatedOutputInLocalStorage = JSON.parse(localStorage.getItem("generatedOutput"));
@@ -57,6 +57,7 @@ const useSubmit = (state, dispatchFn, profession, editable, image) => {
         dispatchFn({ type: "modal", payload: true });
         dispatchFn({ type: "loading", payload: false });
         dispatchFn({ type: "edit", payload: !editable });
+        toast.dismiss();
         return;
       }
 
