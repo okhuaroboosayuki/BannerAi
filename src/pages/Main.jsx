@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { handleInputChange, truncateFilename } from "../utils";
 import { ToastContainer } from "react-toastify";
 import { Button, Form, Input, Modal, SocialMediaField } from "../components";
@@ -10,9 +11,23 @@ const Main = () => {
   const bannerRef = useRef(null);
   const imageInputRef = useRef(null);
 
+  const uuid = useMemo(() => uuidv4(), []);
+
   const { state, dispatch } = useFormReducer();
 
   const { isLoading, name, email, profession, image, imageInputName, socialMedia, socialMediaLink, socialButtonClicked, socialMediaName, errors, generatedOutput, openModal, editable } = state;
+
+  const { handleViewModal } = useViewModal(dispatch, openModal);
+
+  const { handleSubmit } = useSubmit(state, dispatch, profession, editable, uuid);
+
+  const { handleDownload } = useDownload(bannerRef, name, dispatch);
+
+  const { handleEdit } = useEdit(dispatch, editable);
+
+  const { handleReset } = useReset(image, imageInputName, dispatch, uuid);
+
+  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch, image, imageInputName, uuid);
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
@@ -20,17 +35,9 @@ const Main = () => {
     }
   }, [socialButtonClicked, socialMediaName]);
 
-  const { handleViewModal } = useViewModal(dispatch, openModal);
-
-  const { handleSubmit } = useSubmit(state, dispatch, profession, editable);
-
-  const { handleDownload } = useDownload(bannerRef, name, dispatch);
-
-  const { handleEdit } = useEdit(dispatch, editable);
-
-  const { handleReset } = useReset(image, imageInputName, dispatch);
-
-  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch, image, imageInputName);
+  useEffect(() => {
+    window.addEventListener("load", clearImageInput);
+  }, [clearImageInput, image]);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">
@@ -160,14 +167,6 @@ const Main = () => {
           onDownload={handleDownload}
         />
       )}
-      {/* <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
-
-          <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
-            <Button type={"button"} text={"hide results"} className={"white-button"} onClick={handleViewModal} />
-            <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={handleDownload} isLoading={isLoading} disabled={isLoading} />
-          </div>
-        </Modal>
-      )} */}
     </main>
   );
 };
