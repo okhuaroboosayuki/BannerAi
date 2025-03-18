@@ -39,7 +39,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
   return (
     <div className="w-full p-5 bg-white/50 h-[300px] flex flex-col items-center justify-center" ref={ref}>
-      <div className="self-center w-full h-full border transition-smooth portrait:hidden landscape:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
+      <div className="self-center w-full h-full border transition-smooth hidden min-[900px]:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
         {/* social media area */}
         <div className="flex flex-col items-start justify-center w-1/4 gap-3 px-3 py-5" style={{ backgroundColor: generatedOutput[0].colors.socialMediaBgColor }}>
           {socialMediaWithoutWebSite
@@ -63,7 +63,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
         {/* main area */}
         <div className="flex justify-between w-full">
-          <div className="flex flex-col items-center justify-around flex-1 w-full gap-5 p-9">
+          <div className="flex flex-col items-center justify-around flex-1 w-full gap-5 p-3 xl:p-9">
             {/* name & email */}
             <div className="flex items-center justify-between w-full gap-8">
               <h1
@@ -80,9 +80,11 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
             {/* profession & website */}
             <div className="flex items-center self-start justify-between w-full gap-2" style={{ color: generatedOutput[0].colors.textColor, fontFamily: generatedOutput[0].fontFamily.declaration }}>
-              <p className="w-[50%] capitalize flex items-center h-full">{profession}</p>
+              <p className="w-fit capitalize flex items-center h-full">{profession}</p>
 
-              <img src={arrowRight} alt="arrow facing the right hand side" />
+              <div className="flex items-center w-[25%]">
+                <img src={arrowRight} alt="arrow facing the right hand side" />
+              </div>
 
               {socialMediaWithWebSite &&
                 socialMediaWithWebSite.map((entry) => {
@@ -90,7 +92,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
                   const website = entry[platform];
 
                   return (
-                    <p key={entry} className="flex items-center h-full lowercase">
+                    <p key={entry} className="flex items-center h-full lowercase w-fit">
                       {website}
                     </p>
                   );
@@ -104,7 +106,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
           </div>
         </div>
       </div>
-      <p className="w-full text-lg text-center portrait:block landscape:hidden">This banner is best viewed in landscape mode. Please rotate your device.</p>
+      <p className="w-full text-lg text-center block min-[900px]:hidden">This banner is best viewed in a wider screen.</p>
     </div>
   );
 });
