@@ -7,9 +7,9 @@ const Modal = ({ name, email, image, profession, socialMedia, generatedOutput, b
       <div className="modal">
         <SimpleBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} ref={bannerRef} />
 
-        <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
+        <div className="justify-center gap-4 lg:gap-8 flex sm:-mt-16 lg:mt-0">
           <Button type={"button"} text={"hide results"} className={"white-button"} onClick={onViewModal} />
-          <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
+          <Button type={"button"} text={"download banner"} className={"blue-button sm:block hidden"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
         </div>
       </div>
     );
@@ -20,9 +20,9 @@ const Modal = ({ name, email, image, profession, socialMedia, generatedOutput, b
       <div className="modal">
         <CreativeBanner name={name} email={email} profession={profession} socialMedia={socialMedia} generatedOutput={generatedOutput} image={image} ref={bannerRef} />
 
-        <div className="justify-center gap-4 lg:gap-8 landscape:flex portrait:hidden sm:-mt-16 lg:mt-0">
+        <div className="justify-center gap-4 lg:gap-8 flex sm:-mt-16 lg:mt-0">
           <Button type={"button"} text={"hide results"} className={"white-button"} onClick={onViewModal} />
-          <Button type={"button"} text={"download banner"} className={"blue-button"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
+          <Button type={"button"} text={"download banner"} className={"blue-button min-[900px]:block hidden"} onClick={onDownload} isLoading={isLoading} disabled={isLoading} />
         </div>
       </div>
     );
