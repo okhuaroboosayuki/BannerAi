@@ -38,7 +38,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
 
   return (
     <div className="w-full p-5 bg-white/50 h-[300px] flex flex-col items-center justify-center" ref={ref}>
-      <div className="self-center w-full h-full border transition-smooth portrait:hidden landscape:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
+      <div className="self-center w-full h-full border transition-smooth hidden sm:flex" style={{ backgroundColor: generatedOutput[0].colors.generalBgColor }}>
         {/* social media area */}
         <div className="flex flex-col items-start justify-center w-1/4 gap-3 px-8 py-5" style={{ backgroundColor: generatedOutput[0].colors.socialMediaBgColor }}>
           {socialMediaWithoutWebSite.map((entry, index) => {
@@ -133,7 +133,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
           </div>
         </div>
       </div>
-      <p className="w-full text-lg text-center portrait:block landscape:hidden">This banner is best viewed in landscape mode. Please rotate your device.</p>
+      <p className="w-full text-lg text-center block sm:hidden">This banner is best viewed in a wider screen.</p>
     </div>
   );
 });
