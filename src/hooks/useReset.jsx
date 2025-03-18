@@ -11,13 +11,13 @@ import supabase from "../services/supabase";
  * @returns {object} The handleReset function
  */
 
-const useReset = (image, imageInputName, dispatchFn) => {
+const useReset = (image, imageInputName, dispatchFn, uuid) => {
   const handleReset = () => {
     dispatchFn({ type: "reset" });
     localStorage.removeItem("generatedOutput");
 
     if (image) {
-      const { error } = supabase.storage.from("image-store").remove(imageInputName);
+      const { error } = supabase.storage.from("image-store").remove([`${imageInputName}-${uuid}`]);
 
       if (error) {
         toast.error(error.message);
@@ -25,7 +25,6 @@ const useReset = (image, imageInputName, dispatchFn) => {
       }
     }
 
-    console.clear();
     toast.dismiss();
     toast.success("Reset successful!", { autoClose: 3000 });
   };
