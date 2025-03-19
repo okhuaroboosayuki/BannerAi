@@ -16,7 +16,6 @@ import supabase from "../services/supabase";
 const useSubmit = (state, dispatchFn, uuid) => {
   async function uploadImage() {
     const { error } = await supabase.storage.from("image-store").upload(`${state.image.name}-${uuid}`, state.image);
-    console.log(uuid);
 
     if (error) {
       if (error.message === "The object exceeded the maximum allowed size") {

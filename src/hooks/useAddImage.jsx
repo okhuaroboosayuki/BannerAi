@@ -41,7 +41,6 @@ const useAddImage = (imageInputRef, dispatchFn, state, uuid) => {
 
   async function deleteImageFromDB() {
     const { error } = await supabase.storage.from("image-store").remove([`${state.imageInputName}-${uuid}`]);
-    console.log(uuid);
     if (error) console.error(error);
   }
 
