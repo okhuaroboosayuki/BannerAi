@@ -1,8 +1,19 @@
 import supabase from "../services/supabase";
 
-const useAddImage = (imageInputRef, dispatchFn, image, imageInputName, uuid) => {
+/**
+ * Custom hook to handle adding and clearing images.
+ *
+ * @param {object} imageInputRef - A React ref object attached to the file input element.
+ * @param {function} dispatchFn - The dispatch function used to update the application state.
+ * @param {object} state - The application state object, containing `image` (File or URL) and `imageInputName` (string).
+ * @param {string|null} uuid - A unique identifier used for naming the uploaded image file in Supabase storage.
+ *
+ * @returns {object} An object containing the `handleAddImage`, `clearImageInput`, and `cleanUp` functions.
+ */
+
+const useAddImage = (imageInputRef, dispatchFn, state, uuid) => {
   const handleFileChange = (e) => {
-    const containsURL = image instanceof File;
+    const containsURL = state.image instanceof File;
 
     const file = e.target.files[0];
 
@@ -12,7 +23,7 @@ const useAddImage = (imageInputRef, dispatchFn, image, imageInputName, uuid) => 
       return;
     }
 
-    if (imageInputName !== "choose image" && !containsURL) {
+    if (state.imageInputName !== "choose image" && !containsURL) {
       deleteImageFromDB();
     }
 
@@ -29,7 +40,7 @@ const useAddImage = (imageInputRef, dispatchFn, image, imageInputName, uuid) => 
   }
 
   async function deleteImageFromDB() {
-    const { error } = await supabase.storage.from("image-store").remove([`${imageInputName}-${uuid}`]);
+    const { error } = await supabase.storage.from("image-store").remove([`${state.imageInputName}-${uuid}`]);
     console.log(uuid);
     if (error) console.error(error);
   }
@@ -40,7 +51,7 @@ const useAddImage = (imageInputRef, dispatchFn, image, imageInputName, uuid) => 
   };
 
   const clearImageInput = async () => {
-    const containsURL = image instanceof File;
+    const containsURL = state.image instanceof File;
 
     if (!containsURL) {
       deleteImageFromDB();

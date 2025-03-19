@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 
 /**
  * Custom hook to handle downloading the banner as an image.
- * @param {object} bannerRef - The banner reference
- * @param {string} name - The name of the user
- * @param {function} dispatchFn - The dispatch function
- * @returns {object} The handleDownload function
+ *
+ * @param {object} bannerRef - A React ref object attached to the HTML element representing the banner.
+ * @param {string} name - The name of the user, used in the filename of the downloaded image.
+ * @param {function} dispatchFn - The dispatch function used to update the application state, potentially for loading or success indicators.
+ *
+ * @returns {object} An object containing the `handleDownload` function.
  */
 
 const useDownload = (bannerRef, name, dispatchFn) => {

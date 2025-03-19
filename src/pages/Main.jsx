@@ -19,25 +19,21 @@ const Main = () => {
 
   const { handleViewModal } = useViewModal(dispatch, openModal);
 
-  const { handleSubmit } = useSubmit(state, dispatch, profession, editable, uuid);
+  const { handleSubmit } = useSubmit(state, dispatch, uuid);
 
   const { handleDownload } = useDownload(bannerRef, name, dispatch);
 
   const { handleEdit } = useEdit(dispatch, editable);
 
-  const { handleReset } = useReset(image, imageInputName, dispatch, uuid);
+  const { handleReset } = useReset(state, dispatch, uuid);
 
-  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch, image, imageInputName, uuid);
+  const { handleAddImage, clearImageInput } = useAddImage(imageInputRef, dispatch, state, uuid);
 
   useEffect(() => {
     if (socialButtonClicked && smInputRef.current) {
       smInputRef.current.focus();
     }
   }, [socialButtonClicked, socialMediaName]);
-
-  useEffect(() => {
-    window.addEventListener("load", clearImageInput);
-  }, [clearImageInput, image]);
 
   return (
     <main className="flex flex-col items-center justify-center w-full gap-6 py-5 sm:px-14 px-11">

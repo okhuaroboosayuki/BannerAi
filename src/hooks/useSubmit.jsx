@@ -5,15 +5,15 @@ import supabase from "../services/supabase";
 
 /**
  * Custom hook to handle form submission and banner generation.
- * @param {object} state - The state object
- * @param {function} dispatchFn - The dispatch function
- * @param {string} profession - The profession
- * @param {boolean} editable - The editable state
- * @param {File | URL} image - The image state
- * @returns {object} The handleSubmit function
+ *
+ * @param {object} state - The form state object containing input values, including `image` (File or URL), `profession` (string), and `editable` (boolean).
+ * @param {function} dispatchFn - The dispatch function used to update the application state.
+ * @param {string|null} uuid - A unique identifier used for naming the uploaded image file.
+ *
+ * @returns {object} An object containing the `handleSubmit` function.
  */
 
-const useSubmit = (state, dispatchFn, profession, editable, uuid) => {
+const useSubmit = (state, dispatchFn, uuid) => {
   async function uploadImage() {
     const { error } = await supabase.storage.from("image-store").upload(`${state.image.name}-${uuid}`, state.image);
     console.log(uuid);
@@ -50,23 +50,23 @@ const useSubmit = (state, dispatchFn, profession, editable, uuid) => {
 
       // check if editable is true and there is a generated output in local storage
       const generatedOutputInLocalStorage = JSON.parse(localStorage.getItem("generatedOutput"));
-      if (editable && generatedOutputInLocalStorage) {
+      if (state.editable && generatedOutputInLocalStorage) {
         dispatchFn({ type: "submit", payload: generatedOutputInLocalStorage });
         dispatchFn({ type: "modal", payload: true });
         dispatchFn({ type: "loading", payload: false });
-        dispatchFn({ type: "edit", payload: !editable });
+        dispatchFn({ type: "edit", payload: !state.editable });
         toast.dismiss();
         return;
       }
 
-      const result = await generateBanner(profession);
+      const result = await generateBanner(state.profession);
 
       dispatchFn({ type: "submit", payload: result });
 
       // store result in local storage
       localStorage.setItem("generatedOutput", JSON.stringify(result));
 
-      dispatchFn({ type: "edit", payload: !editable });
+      dispatchFn({ type: "edit", payload: !state.editable });
       dispatchFn({ type: "modal", payload: true });
       toast.dismiss();
     } catch (error) {
