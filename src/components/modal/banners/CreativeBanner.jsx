@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from "react";
 import { PropTypes } from "prop-types";
-import { socialIconsWithWhiteBg, otherIcons } from "../../../assets/icons";
+import { socialIconsWithWhiteBg } from "../../../assets/icons";
 
 const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, generatedOutput, image }, ref) => {
   const getIcon = (platform) => {
@@ -11,8 +11,6 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
   const socialMediaWithWebSite = socialMedia.filter((medium) => Object.keys(medium).includes("website"));
 
   const socialMediaWithoutWebSite = socialMedia.filter((medium) => !Object.keys(medium).includes("website"));
-
-  const arrowRight = otherIcons.find((icon) => icon.name === "arrowRight")?.icon;
 
   const firstName = name.split(" ")[0];
 
@@ -63,7 +61,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
         {/* main area */}
         <div className="flex justify-between w-full">
-          <div className="flex flex-col items-center justify-around flex-1 w-full gap-5 p-3 xl:p-9">
+          <div className="flex flex-col items-center justify-around flex-1 w-full xl:gap-5 p-3 lg:p-5 xl:p-9">
             {/* name & email */}
             <div className="flex items-center justify-between w-full gap-8">
               <h1
@@ -82,8 +80,12 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
             <div className="flex items-center self-start justify-between w-full gap-2" style={{ color: generatedOutput[0].colors.textColor, fontFamily: generatedOutput[0].fontFamily.declaration }}>
               <p className="w-fit capitalize flex items-center h-full">{profession}</p>
 
-              <div className="flex items-center w-[25%]">
-                <img src={arrowRight} alt="arrow facing the right hand side" />
+              <div className="flex items-center justify-center w-[25%]">
+                <div className="relative w-full h-full">
+                  <div className="absolute left-0 w-full lg:w-[80%] xl:w-[72%] h-[0.5px] bg-[#333] translate-y-[-50%]"></div>
+                  <div className="absolute w-3 right-0 lg:right-4 xl:right-8 bottom-[3.5px] rotate-45 h-[1px] bg-[#333]"></div>
+                  <div className="absolute w-3 right-0 lg:right-4 xl:right-8 top-[4px] -rotate-45 h-[1px] bg-[#333]"></div>
+                </div>
               </div>
 
               {socialMediaWithWebSite &&
@@ -92,7 +94,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
                   const website = entry[platform];
 
                   return (
-                    <p key={entry} className="flex items-center h-full lowercase w-fit">
+                    <p key={entry} className="flex items-center h-full lowercase w-fit font-extrabold">
                       {website}
                     </p>
                   );
@@ -102,7 +104,7 @@ const CreativeBanner = forwardRef(({ name, email, profession, socialMedia, gener
 
           {/* image area */}
           <div className="h-full">
-            <img src={image} alt="profile" className="object-cover w-full h-full" />
+            <img src={image} alt="profile" className="object-cover xl:w-full h-full" />
           </div>
         </div>
       </div>
