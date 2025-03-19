@@ -17,7 +17,7 @@ const useDownload = (bannerRef, name, dispatchFn) => {
     const bannerElement = bannerRef.current;
     if (!bannerElement) return;
 
-    const newWidth = 1000; // 967px is the width of the banner to be downloaded
+    const newWidth = 1000; // 1000px is the width of the banner to be downloaded
 
     const originalWidth = bannerElement.offsetWidth; // original width of the banners
 
