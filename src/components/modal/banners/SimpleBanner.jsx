@@ -124,6 +124,7 @@ const SimpleBanner = forwardRef(({ name, email, profession, socialMedia, generat
 
           <div className="flex flex-col items-center justify-center w-full gap-4">
             {otherIcons
+              .filter((icon) => icon.name !== "arrowRight")
               .sort(() => Math.random() - 0.5)
               .map((icon) => (
                 <div key={icon.name} className={`flex w-full items-center ${icon.name === "hashtag" || icon.name === "mail" || icon.name === "splash" ? "justify-center" : "justify-end"}`}>
